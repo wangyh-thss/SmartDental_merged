@@ -75,8 +75,14 @@ public class ToothChartView extends View{
 							Log.i("y", event.getY()/scale+"");
 							touchX = (int)(event.getX()/scale);
 							touchY = (int)(event.getY()/scale);
+							int color = bgImg.getPixel(touchX, touchY);
+							int red = (color & 0x00ff0000) >> 16;
+							int greed = (color & 0x0000ff00) >> 8;
+							int blue = color & 0x000000ff;
+							int toothIndex = red / 8;
+									
 							break;
-							
+						
 					}
 					return false;
 				}
