@@ -10,15 +10,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 @SuppressLint("DrawAllocation")
 public class ToothChartView extends View{
 	ToothChartSurface surface;
+	Bitmap bgImg;
+	Bitmap queryImg;
+	int touchX, touchY;
+	float scale;
 	private ArrayList<ToothGraphic> listToothGraphics;
 
 	public ToothChartView(Context context) {
@@ -36,13 +42,17 @@ public class ToothChartView extends View{
 		Log.i("l","hao");
 		try {
 			//»æÖÆÍ¼Æ¬
-			Bitmap bgImg = BitmapFactory.decodeResource(getResources(),R.drawable.tooth_bg_5); 
+			bgImg = BitmapFactory.decodeResource(getResources(),R.drawable.tooth_up);
+			//queryImg = BitmapFactory.decodeResource(getResources(),R.drawable.tooth_query);
 			
 			//Í¼Æ¬¿í¶È
 			int imgWidth = bgImg.getWidth();
-			int startx = (surface.width-imgWidth)/2;
+			Matrix matrix = new Matrix();
+			scale = (float)surface.width / (float)imgWidth;
+			System.out.println(scale);
+			matrix.setScale(scale, scale);			
 			
-			canvas.drawBitmap(bgImg, startx, 0, surface.bgPaint);
+			canvas.drawBitmap(bgImg, matrix, surface.bgPaint);
 			
 			/*
 			for(int i=0;i<this.listToothGraphics.size();i++){
@@ -54,6 +64,25 @@ public class ToothChartView extends View{
 			*/
 		   //»æÖÆÑÀ³Ý±àºÅ
 			
+			this.setOnTouchListener(new OnTouchListener(){
+
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					// TODO Auto-generated method stub
+					switch(event.getAction() & MotionEvent.ACTION_MASK){
+						case MotionEvent.ACTION_DOWN:
+							Log.i("x", event.getX()/scale+"");
+							Log.i("y", event.getY()/scale+"");
+							touchX = (int)(event.getX()/scale);
+							touchY = (int)(event.getY()/scale);
+							break;
+							
+					}
+					return false;
+				}
+				
+			});
+			
 			super.onDraw(canvas);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,9 +90,6 @@ public class ToothChartView extends View{
 		
 	}
 	
-
-
-
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right,
 			int bottom) {

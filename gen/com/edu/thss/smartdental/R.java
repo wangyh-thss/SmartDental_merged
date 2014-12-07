@@ -108,6 +108,8 @@ public final class R {
         public static final int tooth_bg_2=0x7f02002b;
         public static final int tooth_bg_3=0x7f02002c;
         public static final int tooth_bg_5=0x7f02002d;
+        public static final int tooth_down=0x7f02002e;
+        public static final int tooth_up=0x7f02002f;
     }
     public static final class id {
         public static final int ScrollView=0x7f0b0026;
