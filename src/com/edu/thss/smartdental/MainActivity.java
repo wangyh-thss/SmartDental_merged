@@ -2,6 +2,7 @@ package com.edu.thss.smartdental;
 
 import java.util.ArrayList;
 
+import com.edu.thss.smartdental.model.tooth.ToothChartView;
 import com.edu.thss.smartdental.ui.drawer.NavDrawerItem;
 import com.edu.thss.smartdental.ui.drawer.NavDrawerListAdapter;
 
@@ -18,7 +19,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,6 +49,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 		if(savedInstanceState == null){
 			selectItem(0);
 		}
+		
 	}
 	
 	@SuppressLint("NewApi")

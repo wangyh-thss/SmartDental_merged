@@ -21,10 +21,10 @@ import android.view.View;
 @SuppressLint("DrawAllocation")
 public class ToothChartView extends View{
 	ToothChartSurface surface;
-	Bitmap bgImg;
-	Bitmap queryImg;
-	int touchX, touchY;
-	float scale;
+	public Bitmap bgImg;
+	public Bitmap queryImg;
+	public int touchX, touchY;
+	public float scale;
 	private ArrayList<ToothGraphic> listToothGraphics;
 
 	public ToothChartView(Context context) {
@@ -63,7 +63,7 @@ public class ToothChartView extends View{
 			}
 			*/
 		   //ªÊ÷∆—¿≥›±‡∫≈
-			
+			/*
 			this.setOnTouchListener(new OnTouchListener(){
 
 				@Override
@@ -88,7 +88,7 @@ public class ToothChartView extends View{
 				}
 				
 			});
-			
+			*/
 			super.onDraw(canvas);
 		} catch (Exception e) {
 			e.printStackTrace();
