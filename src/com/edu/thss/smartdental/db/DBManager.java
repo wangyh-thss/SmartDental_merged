@@ -1,4 +1,4 @@
-package com.edu.thss.smartdental.db;
+ï»¿package com.edu.thss.smartdental.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,9 +46,9 @@ public class DBManager {
  
         try {
             if (!(new File(dbfile).exists())) {
-                //ÅĞ¶ÏÊı¾İ¿âÎÄ¼şÊÇ·ñ´æÔÚ£¬Èô²»´æÔÚÔòÖ´ĞĞµ¼Èë£¬·ñÔòÖ±½Ó´ò¿ªÊı¾İ¿â
+                //åˆ¤æ–­æ•°æ®åº“æ–‡ä»¶æ˜¯å¦å­˜åœ¨ï¼Œè‹¥ä¸å­˜åœ¨åˆ™æ‰§è¡Œå¯¼å…¥ï¼Œå¦åˆ™ç›´æ¥æ‰“å¼€æ•°æ®åº“
                 InputStream is = this.context.getResources().openRawResource(
-                        R.raw.smartdental); //Óûµ¼ÈëµÄÊı¾İ¿â
+                        R.raw.smartdental); //æ¬²å¯¼å…¥çš„æ•°æ®åº“
                 FileOutputStream fos = new FileOutputStream(dbfile);
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
@@ -73,17 +73,17 @@ public class DBManager {
     }
 
      /**
-	 * ¹Ø±ÕÊı¾İ¿â
+	 * å…³é—­æ•°æ®åº“
 	 * */
 	public void closeDB(){
 		db.close();
 	}
 	/**
-	 * ÒÔÏÂÎªÊı¾İ¿â²éÑ¯Ïà¹Ø²Ù×÷
+	 * ä»¥ä¸‹ä¸ºæ•°æ®åº“æŸ¥è¯¢ç›¸å…³æ“ä½œ
 	 * */
 	
 	/**
-	 * ·µ»Ø²éÑ¯ÁĞ±í£¬ÒÔ²¡ÈËÎªÀı
+	 * è¿”å›æŸ¥è¯¢åˆ—è¡¨ï¼Œä»¥ç—…äººä¸ºä¾‹
 	 * */
 	public List<SDPatient> query(){
 		ArrayList<SDPatient> patients  = new ArrayList<SDPatient>();
@@ -114,5 +114,22 @@ public class DBManager {
  		}
 		c.close();
 		return patient;
+	}
+	
+	public SDToothInfo queryToothByPosition(int id) {
+		SDToothInfo tooth = new SDToothInfo();
+		Cursor c = db.rawQuery("select * from tooth where position = " + id, null);
+		if (c.getCount() > 0) {
+			c.moveToNext();
+			tooth.position = c.getInt(c.getColumnIndex("position"));
+			tooth.name = c.getString(c.getColumnIndex("name"));
+			tooth.state = c.getString(c.getColumnIndex("state"));
+			tooth.lost_state = c.getString(c.getColumnIndex("lost_state"));
+			tooth.disaster = c.getString(c.getColumnIndex("disaster"));
+			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
+			tooth.commonsense = c.getString(c.getColumnIndex("commonsense"));
+		}
+		c.close();
+		return tooth;
 	}
 }
