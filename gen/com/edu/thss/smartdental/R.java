@@ -105,12 +105,13 @@ public final class R {
         public static final int pic_1=0x7f020027;
         public static final int selected_background=0x7f020028;
         public static final int tabs_pattern=0x7f020029;
-        public static final int tooth_bg=0x7f02002a;
-        public static final int tooth_bg_2=0x7f02002b;
-        public static final int tooth_bg_3=0x7f02002c;
-        public static final int tooth_bg_5=0x7f02002d;
-        public static final int tooth_down=0x7f02002e;
-        public static final int tooth_up=0x7f02002f;
+        public static final int tooth_2d=0x7f02002a;
+        public static final int tooth_bg=0x7f02002b;
+        public static final int tooth_bg_2=0x7f02002c;
+        public static final int tooth_bg_3=0x7f02002d;
+        public static final int tooth_bg_5=0x7f02002e;
+        public static final int tooth_down=0x7f02002f;
+        public static final int tooth_up=0x7f020030;
     }
     public static final class id {
         public static final int ScrollView=0x7f0b0026;
@@ -296,7 +297,7 @@ public final class R {
         public static final int table2=0x7f0b003c;
         public static final int table3=0x7f0b0037;
         public static final int test_btn=0x7f0b0016;
-        public static final int tooth_2d=0x7f0b00bb;
+        public static final int tooth_2d_img=0x7f0b00bb;
         public static final int tooth_child_title=0x7f0b00bd;
         public static final int tooth_father_arrow=0x7f0b00bf;
         public static final int tooth_father_title=0x7f0b00be;

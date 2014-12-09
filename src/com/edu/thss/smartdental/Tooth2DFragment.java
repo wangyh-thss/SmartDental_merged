@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.view.View.OnClickListener; 
@@ -26,6 +28,7 @@ public class Tooth2DFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		Spinner spinner=(Spinner)rootView.findViewById(R.id.illness);
 		spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
@@ -39,6 +42,9 @@ public class Tooth2DFragment extends Fragment{
 			public void onNothingSelected(AdapterView<?> arg0){
 			}
 		});
+		//ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
+		
+		/*
 		final ToothChartView toothView = (ToothChartView)rootView.findViewById(R.id.tooth_2d);
 		toothView.setOnTouchListener(new OnTouchListener(){
 
@@ -56,15 +62,16 @@ public class Tooth2DFragment extends Fragment{
 						int greed = (color & 0x0000ff00) >> 8;
 						int blue = color & 0x000000ff;
 						int toothIndex = red / 8;
-								
+						showCustomDialog();
 						break;
 					
 				}
 				return false;
 			}
 		});
+		*/
 		//Context mContext = getApplicationContext();  
-		showCustomDialog();
+		
 		return rootView;
 	}
 	
@@ -78,14 +85,26 @@ public class Tooth2DFragment extends Fragment{
 		tableLayout.setVisibility(View.GONE);
 		
 		
+		DisplayMetrics  dm = new DisplayMetrics();   
+	     //取得窗口属性   
+	     super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
+	        
+	     //窗口的宽度   
+	    int screenWidth = dm.widthPixels;   
+	        
+	    //窗口高度   
+	    int screenHeight = dm.heightPixels;          
+		
 		Window dialogWindow = dialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
-		lp.x = 100; // 新位置X坐标
-        lp.y = 100; // 新位置Y坐标
-        lp.width = 720; // 宽度
-        lp.height = 900; // 高度
-        lp.alpha = 0.8f; // 透明度
+		
+		lp.x = (int) (screenWidth*0.05); // 新位置X坐标
+	    lp.y = (int) (screenWidth*0.05); // 新位置Y坐标
+	    lp.width = (int) (screenWidth*0.9); // 宽度
+	    lp.height = (int) (screenHeight*0.9); // 高度
+	    lp.alpha = 0.8f; // 透明度
+
         dialogWindow.setAttributes(lp);
         
         button1.setOnClickListener(new OnClickListener() {

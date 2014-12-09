@@ -52,7 +52,7 @@ public class ToothChartView extends View{
 			System.out.println(scale);
 			matrix.setScale(scale, scale);			
 			
-			canvas.drawBitmap(bgImg, matrix, surface.bgPaint);
+			canvas.drawBitmap(bgImg, 0, 0, surface.bgPaint);
 			
 			/*
 			for(int i=0;i<this.listToothGraphics.size();i++){
