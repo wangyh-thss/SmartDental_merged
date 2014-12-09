@@ -4,6 +4,10 @@ import com.edu.thss.smartdental.model.tooth.ToothChartView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -42,8 +46,27 @@ public class Tooth2DFragment extends Fragment{
 			public void onNothingSelected(AdapterView<?> arg0){
 			}
 		});
-		//ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
-		
+		final ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
+		toothView.setOnTouchListener(new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				switch(event.getAction() & MotionEvent.ACTION_MASK){
+					case MotionEvent.ACTION_DOWN:
+						Drawable draw = toothView.getDrawable();
+						BitmapDrawable bd = (BitmapDrawable) draw;
+						Bitmap bmp = bd.getBitmap();
+						int width = bmp.getWidth();
+						int height = bmp.getHeight();
+						//touchX = (int)(event.getX()/toothView.scale);
+						//touchY = (int)(event.getY()/toothView.scale);
+						break;
+				}
+				return false;
+			}
+			
+		});
 		/*
 		final ToothChartView toothView = (ToothChartView)rootView.findViewById(R.id.tooth_2d);
 		toothView.setOnTouchListener(new OnTouchListener(){
