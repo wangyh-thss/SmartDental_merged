@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-    <!-- 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!--
     <com.edu.thss.smartdental.model.tooth.ToothChartView
         android:id="@+id/tooth_2d"
         android:layout_width="fill_parent"
@@ -15,14 +16,16 @@
     <ImageView
         android:id="@+id/tooth_2d_img"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@android:color/white"
         android:scaleType="fitCenter"
-        android:src="@drawable/tooth_2d" />
+        android:src="@drawable/ab_bg" />
 
     <Spinner
         android:id="@+id/illness"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/illness" />
+
 </LinearLayout>

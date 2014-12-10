@@ -1,7 +1,12 @@
 package com.edu.thss.smartdental;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.awt.Color;
+
 import com.edu.thss.smartdental.model.tooth.ToothChartView;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,28 +30,104 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.view.View.OnClickListener; 
 
 public class Tooth2DFragment extends Fragment{
 
+	private Bitmap template;
+	private Bitmap tooth2D;
+	private ArrayList <Integer> pCode, pCoor;
+	
+	private int getCode(int color){
+		int r = android.graphics.Color.red(color);
+		int g = android.graphics.Color.green(color);
+		int b = android.graphics.Color.blue(color);
+		if (r == g && r % 8 == 0 && g % 8 == 0){
+			if (b == 23)
+				return r / 8 + 32;
+			if (b == 233)
+				return r / 8;
+			return -1;
+		}
+		else
+			return -1;
+	}
+	
+	private void InitImage(ImageView toothView){
+		template = BitmapFactory.decodeResource(getResources(), R.drawable.tooth_2d);
+		//tooth2D = template.copy(template.getConfig(), true);
+		int width = getResources().getDisplayMetrics().widthPixels;
+		int height = getResources().getDisplayMetrics().heightPixels;
+		
+		if (1.0 * height / width < 2.0 / 1.3)
+			width = (int)(height * 1.3 / 2.0);
+		else
+			height = (int)(width * 2.0 / 1.3);
+		
+		tooth2D = Bitmap.createScaledBitmap(template, width, height, false);
+		template = tooth2D.copy(tooth2D.getConfig(), true);
+		int w = tooth2D.getWidth();
+		int h = tooth2D.getHeight();
+		int[] pixels = new int[w * h];
+		tooth2D.getPixels(pixels, 0, w, 0, 0, w, h);
+		pCoor = new ArrayList <Integer>();
+		pCode = new ArrayList <Integer>();
+		for (int i = 0; i < w * h; ++i){
+			int code = getCode(pixels[i]);
+			if (code >= 0){
+				pCoor.add(i);
+				pCode.add(code);
+			}
+			if (code >= 0 && code < 32)
+				pixels[i] = android.graphics.Color.rgb(255, 255, 255);
+			if (code >= 32)
+				pixels[i] = android.graphics.Color.rgb(233, 233, 233);
+		}
+		tooth2D.setPixels(pixels, 0, w, 0, 0, w, h);
+		toothView.setImageBitmap(tooth2D);
+		/*
+		tooth2D.getPixels(pixels, 0, w, 0, 0, w, h);
+		for (int i = 0; i < w * h; ++i)
+			pixels[i] = 0;
+		tooth2D.setPixels(pixels, 0, w, 0, 0, w, h);*/
+		
+	}
+	
+	private void fill(int code, int color, ImageView toothView){
+		int w = tooth2D.getWidth();
+		for (int i = 0; i < pCoor.size(); ++i){
+			if (pCode.get(i) == code)
+				tooth2D.setPixel(pCoor.get(i) % w, pCoor.get(i) / w, color);
+		}
+		toothView.setImageBitmap(tooth2D);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
+
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
+		
+		//Spinner
 		Spinner spinner=(Spinner)rootView.findViewById(R.id.illness);
 		spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
 			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long id){
 				String result = parent.getItemAtPosition(pos).toString();
-				if(result == "ÑÀö¸Ñ×"){}
-				else if(result == "ÑÀÖÜÑ×"){}
-				else if(result == "È£³Ý"){}
+				if(result == "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"){}
+				else if(result == "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"){}
+				else if(result == "È£ï¿½ï¿½"){}
 				else {}
 			}
 			public void onNothingSelected(AdapterView<?> arg0){
 			}
 		});
+		
+		//Tooth-2D
 		final ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
+		InitImage(toothView);
 		toothView.setOnTouchListener(new OnTouchListener(){
 
 			@Override
@@ -54,13 +135,46 @@ public class Tooth2DFragment extends Fragment{
 				// TODO Auto-generated method stub
 				switch(event.getAction() & MotionEvent.ACTION_MASK){
 					case MotionEvent.ACTION_DOWN:
-						Drawable draw = toothView.getDrawable();
-						BitmapDrawable bd = (BitmapDrawable) draw;
-						Bitmap bmp = bd.getBitmap();
-						int width = bmp.getWidth();
-						int height = bmp.getHeight();
-						//touchX = (int)(event.getX()/toothView.scale);
+						int imageW = tooth2D.getWidth();
+						int imageH = tooth2D.getHeight();
+						int viewW = toothView.getWidth();
+						int viewH = toothView.getHeight();
+						double rateW = 1.0 * imageW / viewW;
+						double rateH = 1.0 * imageH / viewH;
+						double rate = Math.max(rateW, rateH);
+						
+						int x = (int)((event.getX() - viewW / 2) * rate + imageW / 2);
+						int y = (int)((event.getY() - viewH / 2) * rate + imageH / 2);
+						
+						System.out.println(x);
+						System.out.println(y);
+						//toothView.
 						//touchY = (int)(event.getY()/toothView.scale);
+					    //AlertDialog.Builder builder = new AlertDialog
+					    //		.Builder(com.edu.thss.smartdental.model.tooth.Tooth2DFragment.this); 
+						//builder.setMessage(Float.toString(scaleX));
+						//builder.show();
+						if (x < 0 || x >= imageW || y < 0 || y >= imageH)
+							break;
+						int code = -1;
+						for (int i = 0; i < pCoor.size(); ++i){
+							if (pCoor.get(i) == y * imageW + x){
+								code = pCode.get(i);
+								break;
+							}
+						}
+						if (code >= 0){
+							showCustomDialog(code);
+						}
+						/*
+						int color = template.getPixel((int)(x), (int)(y));
+						int r = android.graphics.Color.red(color);
+						int g = android.graphics.Color.green(color);
+						int b = android.graphics.Color.blue(color);
+						if (b == 23 || b == 233 && r == g && r % 8 == 0 && g % 8 == 0){
+							fill(r / 8 , 0);
+							showCustomDialog(r / 8);
+						}*/
 						break;
 				}
 				return false;
@@ -98,35 +212,40 @@ public class Tooth2DFragment extends Fragment{
 		return rootView;
 	}
 	
-	protected void showCustomDialog() {
+	protected void showCustomDialog(int code) {
     	final Dialog dialog = new Dialog(super.getActivity());  
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);  
         dialog.setContentView(R.layout.dialoglayout);  
         Button button1 = (Button)dialog.findViewById(R.id.dialog_tooth_myinfo);
         Button button2 = (Button)dialog.findViewById(R.id.dialog_tooth_intr);
+        
+        /*Add*/
+        TextView number = (TextView)dialog.findViewById(R.id.dialog_tooth_code);
+        number.setText(Integer.toString(code));
+        
         TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
 		tableLayout.setVisibility(View.GONE);
 		
 		
 		DisplayMetrics  dm = new DisplayMetrics();   
-	     //È¡µÃ´°¿ÚÊôÐÔ   
+	     //È¡ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   
 	     super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
 	        
-	     //´°¿ÚµÄ¿í¶È   
+	     //ï¿½ï¿½ï¿½ÚµÄ¿ï¿½ï¿½   
 	    int screenWidth = dm.widthPixels;   
 	        
-	    //´°¿Ú¸ß¶È   
+	    //ï¿½ï¿½ï¿½Ú¸ß¶ï¿½   
 	    int screenHeight = dm.heightPixels;          
 		
 		Window dialogWindow = dialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
 		
-		lp.x = (int) (screenWidth*0.05); // ÐÂÎ»ÖÃX×ø±ê
-	    lp.y = (int) (screenWidth*0.05); // ÐÂÎ»ÖÃY×ø±ê
-	    lp.width = (int) (screenWidth*0.9); // ¿í¶È
-	    lp.height = (int) (screenHeight*0.9); // ¸ß¶È
-	    lp.alpha = 0.8f; // Í¸Ã÷¶È
+		lp.x = (int) (screenWidth*0.05); // ï¿½ï¿½Î»ï¿½ï¿½Xï¿½ï¿½ï¿½
+	    lp.y = (int) (screenWidth*0.05); // ï¿½ï¿½Î»ï¿½ï¿½Yï¿½ï¿½ï¿½
+	    lp.width = (int) (screenWidth*0.9); // ï¿½ï¿½ï¿½
+	    lp.height = (int) (screenHeight*0.9); // ï¿½ß¶ï¿½
+	    lp.alpha = 0.8f; // Í¸ï¿½ï¿½ï¿½ï¿½
 
         dialogWindow.setAttributes(lp);
         
