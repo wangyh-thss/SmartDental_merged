@@ -116,9 +116,9 @@ public class Tooth2DFragment extends Fragment{
 		spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
 			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long id){
 				String result = parent.getItemAtPosition(pos).toString();
-				if(result == "������"){}
-				else if(result == "������"){}
-				else if(result == "ȣ��"){}
+				if(result == "锟斤拷锟斤拷锟斤拷"){}
+				else if(result == "锟斤拷锟斤拷锟斤拷"){}
+				else if(result == "龋锟斤拷"){}
 				else {}
 			}
 			public void onNothingSelected(AdapterView<?> arg0){
@@ -133,38 +133,42 @@ public class Tooth2DFragment extends Fragment{
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
+				int imageW = tooth2D.getWidth();
+				int imageH = tooth2D.getHeight();
+				int viewW = toothView.getWidth();
+				int viewH = toothView.getHeight();
+				double rateW = 1.0 * imageW / viewW;
+				double rateH = 1.0 * imageH / viewH;
+				double rate = Math.max(rateW, rateH);
+				
+				int x = (int)((event.getX() - viewW / 2) * rate + imageW / 2);
+				int y = (int)((event.getY() - viewH / 2) * rate + imageH / 2);
+				
+				System.out.println(x);
+				System.out.println(y);
+				//toothView.
+				//touchY = (int)(event.getY()/toothView.scale);
+			    //AlertDialog.Builder builder = new AlertDialog
+			    //		.Builder(com.edu.thss.smartdental.model.tooth.Tooth2DFragment.this); 
+				//builder.setMessage(Float.toString(scaleX));
+				//builder.show();
+				if (x < 0 || x >= imageW || y < 0 || y >= imageH)
+					return false;
+				int code = -1;
+				for (int i = 0; i < pCoor.size(); ++i){
+					if (pCoor.get(i) == y * imageW + x){
+						code = pCode.get(i);
+						break;
+					}
+				}
 				switch(event.getAction() & MotionEvent.ACTION_MASK){
 					case MotionEvent.ACTION_DOWN:
-						int imageW = tooth2D.getWidth();
-						int imageH = tooth2D.getHeight();
-						int viewW = toothView.getWidth();
-						int viewH = toothView.getHeight();
-						double rateW = 1.0 * imageW / viewW;
-						double rateH = 1.0 * imageH / viewH;
-						double rate = Math.max(rateW, rateH);
-						
-						int x = (int)((event.getX() - viewW / 2) * rate + imageW / 2);
-						int y = (int)((event.getY() - viewH / 2) * rate + imageH / 2);
-						
-						System.out.println(x);
-						System.out.println(y);
-						//toothView.
-						//touchY = (int)(event.getY()/toothView.scale);
-					    //AlertDialog.Builder builder = new AlertDialog
-					    //		.Builder(com.edu.thss.smartdental.model.tooth.Tooth2DFragment.this); 
-						//builder.setMessage(Float.toString(scaleX));
-						//builder.show();
-						if (x < 0 || x >= imageW || y < 0 || y >= imageH)
-							break;
-						int code = -1;
-						for (int i = 0; i < pCoor.size(); ++i){
-							if (pCoor.get(i) == y * imageW + x){
-								code = pCode.get(i);
-								break;
-							}
-						}
 						if (code >= 0){
 							showCustomDialog(code);
+							if (code > 32)
+								code -= 32;
+							int color = android.graphics.Color.rgb(160, 160, 160);
+							//fill(code, color, toothView);
 						}
 						/*
 						int color = template.getPixel((int)(x), (int)(y));
@@ -175,6 +179,14 @@ public class Tooth2DFragment extends Fragment{
 							fill(r / 8 , 0);
 							showCustomDialog(r / 8);
 						}*/
+						break;
+					case MotionEvent.ACTION_UP:
+						if (code >= 0){
+							if (code > 32)
+								code -= 32;
+							int color = android.graphics.Color.rgb(255, 255, 255);
+							fill(code, color, toothView);
+						}
 						break;
 				}
 				return false;
@@ -228,24 +240,24 @@ public class Tooth2DFragment extends Fragment{
 		
 		
 		DisplayMetrics  dm = new DisplayMetrics();   
-	     //ȡ�ô�������   
+	     //取锟矫达拷锟斤拷锟斤拷锟斤拷   
 	     super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
 	        
-	     //���ڵĿ��   
+	     //锟斤拷锟节的匡拷锟�   
 	    int screenWidth = dm.widthPixels;   
 	        
-	    //���ڸ߶�   
+	    //锟斤拷锟节高讹拷   
 	    int screenHeight = dm.heightPixels;          
 		
 		Window dialogWindow = dialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
 		
-		lp.x = (int) (screenWidth*0.05); // ��λ��X���
-	    lp.y = (int) (screenWidth*0.05); // ��λ��Y���
-	    lp.width = (int) (screenWidth*0.9); // ���
-	    lp.height = (int) (screenHeight*0.9); // �߶�
-	    lp.alpha = 0.8f; // ͸����
+		lp.x = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷X锟斤拷锟�
+	    lp.y = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷Y锟斤拷锟�
+	    lp.width = (int) (screenWidth*0.9); // 锟斤拷锟�
+	    lp.height = (int) (screenHeight*0.9); // 锟竭讹拷
+	    lp.alpha = 1.0f; // 透锟斤拷锟斤拷
 
         dialogWindow.setAttributes(lp);
         
