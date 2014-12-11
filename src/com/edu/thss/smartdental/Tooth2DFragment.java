@@ -39,6 +39,7 @@ public class Tooth2DFragment extends Fragment{
 	private Bitmap template;
 	private Bitmap tooth2D;
 	private ArrayList <Integer> pCode, pCoor;
+	private ImageView toothView;
 	
 	private int getCode(int color){
 		int r = android.graphics.Color.red(color);
@@ -104,29 +105,67 @@ public class Tooth2DFragment extends Fragment{
 		toothView.setImageBitmap(tooth2D);
 	}
 	
+	private void clearToothColor(){
+		int white = android.graphics.Color.rgb(255, 255, 255);
+		for (int i = 0; i < 32; i++){
+			fill(i, white, toothView);
+		}
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
 
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
+		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		
 		//Spinner
 		Spinner spinner=(Spinner)rootView.findViewById(R.id.illness);
 		spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
 			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long id){
 				String result = parent.getItemAtPosition(pos).toString();
-				if(result == "锟斤拷锟斤拷锟斤拷"){}
-				else if(result == "锟斤拷锟斤拷锟斤拷"){}
-				else if(result == "龋锟斤拷"){}
-				else {}
+				clearToothColor();
+
+				if (result.equals("无")){
+					
+				}
+				else if(result.equals("牙龈炎")){
+					int color = android.graphics.Color.rgb(255, 0, 0);
+					fill(0,color,toothView);
+					fill(10,color,toothView);
+					fill(20,color,toothView);
+				}
+				else if(result.equals("牙周炎")){
+					int color = android.graphics.Color.rgb(0, 255, 0);
+					fill(2,color,toothView);
+					fill(12,color,toothView);
+					fill(22,color,toothView);
+				}
+				else if(result.equals("龋齿")){
+					int color = android.graphics.Color.rgb(0, 0, 255);
+					fill(3,color,toothView);
+					fill(31,color,toothView);
+					fill(17,color,toothView);
+				}
+				else {
+					int color = android.graphics.Color.rgb(0, 0, 0);
+					fill(0,color,toothView);
+					fill(10,color,toothView);
+					fill(20,color,toothView);
+					fill(2,color,toothView);
+					fill(12,color,toothView);
+					fill(22,color,toothView);
+					fill(3,color,toothView);
+					fill(31,color,toothView);
+					fill(17,color,toothView);
+				}
 			}
 			public void onNothingSelected(AdapterView<?> arg0){
 			}
 		});
 		
 		//Tooth-2D
-		final ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		InitImage(toothView);
 		toothView.setOnTouchListener(new OnTouchListener(){
 
@@ -164,10 +203,12 @@ public class Tooth2DFragment extends Fragment{
 				switch(event.getAction() & MotionEvent.ACTION_MASK){
 					case MotionEvent.ACTION_DOWN:
 						if (code >= 0){
-							showCustomDialog(code);
 							if (code > 32)
 								code -= 32;
 							int color = android.graphics.Color.rgb(160, 160, 160);
+							//fill(code, color, toothView);
+							showCustomDialog(code);
+							color = android.graphics.Color.rgb(255, 255, 255);
 							//fill(code, color, toothView);
 						}
 						/*
@@ -179,14 +220,6 @@ public class Tooth2DFragment extends Fragment{
 							fill(r / 8 , 0);
 							showCustomDialog(r / 8);
 						}*/
-						break;
-					case MotionEvent.ACTION_UP:
-						if (code >= 0){
-							if (code > 32)
-								code -= 32;
-							int color = android.graphics.Color.rgb(255, 255, 255);
-							fill(code, color, toothView);
-						}
 						break;
 				}
 				return false;
