@@ -110,23 +110,49 @@ public class Tooth2DFragment extends Fragment{
 		
 
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
+		final ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		
 		//Spinner
 		Spinner spinner=(Spinner)rootView.findViewById(R.id.illness);
 		spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
 			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long id){
 				String result = parent.getItemAtPosition(pos).toString();
-				if(result == "������"){}
-				else if(result == "������"){}
-				else if(result == "ȣ��"){}
-				else {}
+				if(result == "牙龈炎"){
+					int color = android.graphics.Color.rgb(255, 0, 0);
+					fill(0,color,toothView);
+					fill(10,color,toothView);
+					fill(20,color,toothView);
+				}
+				else if(result == "牙周炎"){
+					int color = android.graphics.Color.rgb(0, 255, 0);
+					fill(2,color,toothView);
+					fill(12,color,toothView);
+					fill(22,color,toothView);
+				}
+				else if(result == "龋齿"){
+					int color = android.graphics.Color.rgb(0, 0, 255);
+					fill(3,color,toothView);
+					fill(31,color,toothView);
+					fill(17,color,toothView);
+				}
+				else {
+					int color = android.graphics.Color.rgb(0, 0, 0);
+					fill(0,color,toothView);
+					fill(10,color,toothView);
+					fill(20,color,toothView);
+					fill(2,color,toothView);
+					fill(12,color,toothView);
+					fill(22,color,toothView);
+					fill(3,color,toothView);
+					fill(31,color,toothView);
+					fill(17,color,toothView);
+				}
 			}
 			public void onNothingSelected(AdapterView<?> arg0){
 			}
 		});
 		
 		//Tooth-2D
-		final ImageView toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		InitImage(toothView);
 		toothView.setOnTouchListener(new OnTouchListener(){
 
@@ -228,24 +254,24 @@ public class Tooth2DFragment extends Fragment{
 		
 		
 		DisplayMetrics  dm = new DisplayMetrics();   
-	     //ȡ�ô�������   
+	     //取锟矫达拷锟斤拷锟斤拷锟斤拷   
 	     super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
 	        
-	     //���ڵĿ��   
+	     //锟斤拷锟节的匡拷锟�   
 	    int screenWidth = dm.widthPixels;   
 	        
-	    //���ڸ߶�   
+	    //锟斤拷锟节高讹拷   
 	    int screenHeight = dm.heightPixels;          
 		
 		Window dialogWindow = dialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
 		
-		lp.x = (int) (screenWidth*0.05); // ��λ��X���
-	    lp.y = (int) (screenWidth*0.05); // ��λ��Y���
-	    lp.width = (int) (screenWidth*0.9); // ���
-	    lp.height = (int) (screenHeight*0.9); // �߶�
-	    lp.alpha = 0.8f; // ͸����
+		lp.x = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷X锟斤拷锟�
+	    lp.y = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷Y锟斤拷锟�
+	    lp.width = (int) (screenWidth*0.9); // 锟斤拷锟�
+	    lp.height = (int) (screenHeight*0.9); // 锟竭讹拷
+	    lp.alpha = 0.8f; // 透锟斤拷锟斤拷
 
         dialogWindow.setAttributes(lp);
         
