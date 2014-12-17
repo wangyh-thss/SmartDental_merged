@@ -203,11 +203,11 @@ public class Tooth2DFragment extends Fragment{
 				switch(event.getAction() & MotionEvent.ACTION_MASK){
 					case MotionEvent.ACTION_DOWN:
 						if (code >= 0){
+							showCustomDialog(code);
 							if (code > 32)
 								code -= 32;
 							int color = android.graphics.Color.rgb(160, 160, 160);
 							//fill(code, color, toothView);
-							showCustomDialog(code);
 							color = android.graphics.Color.rgb(255, 255, 255);
 							//fill(code, color, toothView);
 						}
