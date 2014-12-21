@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-
-    
-
-    <ImageView
-        android:id="@+id/tooth_2d_img"
+    <FrameLayout 
+	        android:id="@+id/tooth_tabcontent1"
+	     	android:layout_width="match_parent"
+	     	android:layout_height="wrap_content"
+	     	android:layout_above="@+id/tooth_2d_tab"
+	     	/>
+    <RadioGroup
+        android:id="@+id/tooth_2d_tab"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@android:color/white"
-        android:scaleType="fitCenter"
-        android:layout_gravity="center"
-        android:src="@drawable/ab_bg" />
-
-    <Spinner
-        android:id="@+id/illness"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:entries="@array/illness" />
+        android:layout_alignParentTop="true"
+        >
+        <RadioButton
+            android:id="@+id/tooth_2d_tab_illness1"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="牙龈炎" />
+        <RadioButton
+            android:id="@+id/tooth_2d_tab_illness2"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="牙周炎" />
+        <RadioButton
+            android:id="@+id/tooth_2d_tab_illness3"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="龋齿" />
+        <RadioButton
+            android:id="@+id/tooth_2d_tab_illness4"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="全部" />
+    </RadioGroup>
+	  
 
-</FrameLayout>
+</RelativeLayout>
