@@ -53,9 +53,9 @@ public class Tooth2DFragment extends Fragment{
 
 	private Bitmap template;
 	private Bitmap tooth2D;
-	private ArrayList <Integer> pCode, pCoor;
+	private ArrayList <Integer> pCode, pCoor, pColored;
 	private ImageView toothView;
-	
+	private int currentSelectTooth, currentSelectColor;
 	private FragmentManager fm = null; 
 	private RadioGroup radioGroup;
 	public Tooth2DFragment(){
@@ -96,6 +96,7 @@ public class Tooth2DFragment extends Fragment{
 		tooth2D.getPixels(pixels, 0, w, 0, 0, w, h);
 		pCoor = new ArrayList <Integer>();
 		pCode = new ArrayList <Integer>();
+		pColored = new ArrayList <Integer>();
 		for (int i = 0; i < w * h; ++i){
 			int code = getCode(pixels[i]);
 			if (code >= 0){
@@ -126,11 +127,21 @@ public class Tooth2DFragment extends Fragment{
 		toothView.setImageBitmap(tooth2D);
 	}
 	
+	private int getColor(int code) {
+		int w = tooth2D.getWidth();
+		for (int i = 0; i < pCoor.size(); ++i){
+			if (pCode.get(i) == code)
+				return tooth2D.getPixel(pCoor.get(i) % w, pCoor.get(i) / w);
+		}
+		return -1;
+	}
+	
 	private void clearToothColor(){
 		int white = android.graphics.Color.rgb(255, 255, 255);
-		for (int i = 0; i < 32; i++){
-			fill(i, white, toothView);
+		for (int i = 0; i < pColored.size(); ++i){
+			fill(pColored.get(i), white, toothView);
 		}
+		pColored.clear();
 	}
 	
 	private void fillToothByIllness(int illCode) {
@@ -143,18 +154,27 @@ public class Tooth2DFragment extends Fragment{
 			fill(0,color,toothView);
 			fill(10,color,toothView);
 			fill(20,color,toothView);
+			pColored.add(0);
+			pColored.add(10);
+			pColored.add(20);
 		}
 		else if(illCode == 2){
 			int color = android.graphics.Color.rgb(0, 255, 0);
 			fill(2,color,toothView);
 			fill(12,color,toothView);
 			fill(22,color,toothView);
+			pColored.add(2);
+			pColored.add(12);
+			pColored.add(22);
 		}
 		else if(illCode == 3){
 			int color = android.graphics.Color.rgb(0, 0, 255);
 			fill(3,color,toothView);
 			fill(31,color,toothView);
 			fill(17,color,toothView);
+			pColored.add(3);
+			pColored.add(31);
+			pColored.add(17);
 		}
 	}
 
@@ -197,32 +217,43 @@ public class Tooth2DFragment extends Fragment{
 				for (int i = 0; i < pCoor.size(); ++i){
 					if (pCoor.get(i) == y * imageW + x){
 						code = pCode.get(i);
+						if (code >= 32)
+							code -= 32;
 						break;
 					}
 				}
-				switch(event.getAction() & MotionEvent.ACTION_MASK){
+				switch(event.getAction()){
 					case MotionEvent.ACTION_DOWN:
 						if (code >= 0){
-							showCustomDialog(code);
-							if (code > 32)
-								code -= 32;
+							currentSelectColor = getColor(code);
 							int color = android.graphics.Color.rgb(160, 160, 160);
-							//fill(code, color, toothView);
-							color = android.graphics.Color.rgb(255, 255, 255);
-							//fill(code, color, toothView);
+							fill(code, color, toothView);
+							currentSelectTooth = code;
 						}
-						/*
-						int color = template.getPixel((int)(x), (int)(y));
-						int r = android.graphics.Color.red(color);
-						int g = android.graphics.Color.green(color);
-						int b = android.graphics.Color.blue(color);
-						if (b == 23 || b == 233 && r == g && r % 8 == 0 && g % 8 == 0){
-							fill(r / 8 , 0);
-							showCustomDialog(r / 8);
-						}*/
+						break;
+					case MotionEvent.ACTION_MOVE:
+						if (code >= 0){
+							if (code == currentSelectTooth) {
+								break;
+							}
+							fill(currentSelectTooth, currentSelectColor, toothView);
+							currentSelectColor = getColor(code);
+							int color = android.graphics.Color.rgb(160, 160, 160);
+							fill(code, color, toothView);
+							currentSelectTooth = code;
+						}
+						else {
+							fill(currentSelectTooth, currentSelectColor, toothView);
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+						if (code >= 0){
+							fill(code, currentSelectColor, toothView);
+							showCustomDialog(code);
+						}
 						break;
 				}
-				return false;
+				return true;
 			}
 		});
 		
