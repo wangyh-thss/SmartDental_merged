@@ -126,10 +126,10 @@ public class DBManager {
 			tooth.position = c.getInt(c.getColumnIndex("position"));
 			tooth.name = c.getString(c.getColumnIndex("name"));
 			tooth.state = c.getString(c.getColumnIndex("state"));
-			tooth.diagnose = c.getString(c.getColumnIndex("diagnose"));
+			tooth.diagnose = c.getInt(c.getColumnIndex("diagnose"));
 			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
-			tooth.recordId = c.getString(c.getColumnIndex("recordId"));
-			tooth.knowledgeId = c.getString(c.getColumnIndex("recordId"));
+			tooth.recordId = c.getInt(c.getColumnIndex("recordId"));
+			tooth.knowledgeId = c.getInt(c.getColumnIndex("recordId"));
 			if (tooth.diagnose == disease) {
 				teeth.add(tooth);
 			}
@@ -146,10 +146,10 @@ public class DBManager {
 			tooth.position = c.getInt(c.getColumnIndex("position"));
 			tooth.name = c.getString(c.getColumnIndex("name"));
 			tooth.state = c.getString(c.getColumnIndex("state"));
-			tooth.diagnose = c.getString(c.getColumnIndex("diagnose"));
+			tooth.diagnose = c.getInt(c.getColumnIndex("diagnose"));
 			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
-			tooth.recordId = c.getString(c.getColumnIndex("recordId"));
-			tooth.knowledgeId = c.getString(c.getColumnIndex("knowledgeId"));
+			tooth.recordId = c.getInt(c.getColumnIndex("recordId"));
+			tooth.knowledgeId = c.getInt(c.getColumnIndex("knowledgeId"));
 		}
 		c.close();
 		return tooth;
@@ -161,7 +161,7 @@ public class DBManager {
 		if (c.getCount() > 0) {
 			c.moveToNext();
 			disease.id = c.getInt(c.getColumnIndex("id"));
-			disease.name = c.getInt(c.getColumnIndex("name"));
+			disease.name = c.getString(c.getColumnIndex("name"));
 		}
 		c.close();
 		return disease;
@@ -173,7 +173,7 @@ public class DBManager {
 		if (c.getCount() > 0) {
 			c.moveToNext();
 			knowledge.id = c.getInt(c.getColumnIndex("id"));
-			knowledge.content = c.getInt(c.getColumnIndex("content"));
+			knowledge.content = c.getString(c.getColumnIndex("content"));
 		}
 		c.close();
 		return knowledge;
