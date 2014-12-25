@@ -68,9 +68,9 @@ public class Tooth2DFragment extends Fragment{
 		int b = android.graphics.Color.blue(color);
 		if (r == g && r % 8 == 0 && g % 8 == 0){
 			if (b == 23)
-				return r / 8 + 32;
+				return (r / 8) + 1 + 32;
 			if (b == 233)
-				return r / 8;
+				return (r / 8) + 1;
 			return -1;
 		}
 		else
@@ -100,12 +100,12 @@ public class Tooth2DFragment extends Fragment{
 		for (int i = 0; i < w * h; ++i){
 			int code = getCode(pixels[i]);
 			if (code >= 0){
-				pCoor.add(i);
+				pCoor.add(i+1);
 				pCode.add(code);
 			}
-			if (code >= 0 && code < 32)
+			if (code > 0 && code <= 32)
 				pixels[i] = android.graphics.Color.rgb(255, 255, 255);
-			if (code >= 32)
+			if (code > 32)
 				pixels[i] = android.graphics.Color.rgb(233, 233, 233);
 		}
 		tooth2D.setPixels(pixels, 0, w, 0, 0, w, h);
@@ -217,7 +217,7 @@ public class Tooth2DFragment extends Fragment{
 				for (int i = 0; i < pCoor.size(); ++i){
 					if (pCoor.get(i) == y * imageW + x){
 						code = pCode.get(i);
-						if (code >= 32)
+						if (code > 32)
 							code -= 32;
 						break;
 					}
