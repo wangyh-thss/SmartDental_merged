@@ -11,36 +11,26 @@
         android:background="@android:color/white"
         android:scaleType="fitCenter"
         android:src="@drawable/ab_bg" />
+    
+    <HorizontalScrollView   
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content" 
+        android:layout_weight="1" 
+        android:fadingEdge="@null"  
+        android:scrollbars="none"   
+        android:id="@+id/horizontalScrollView" > 
+        
+        <RadioGroup
+	        android:id="@+id/tooth_2d_tab"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+	        
+	        
+	        
+	    </RadioGroup>
 
-    <RadioGroup
-        android:id="@+id/tooth_2d_tab"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness1"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="牙龈炎" />
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness2"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="牙周炎" />
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness3"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="龋齿" />
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness4"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="全部" />
-    </RadioGroup>
+	    
+    </HorizontalScrollView>
+    
 </LinearLayout>

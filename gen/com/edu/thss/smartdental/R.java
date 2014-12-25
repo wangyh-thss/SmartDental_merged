@@ -115,7 +115,7 @@ public final class R {
     }
     public static final class id {
         public static final int ScrollView=0x7f0b0026;
-        public static final int action_settings=0x7f0b00c6;
+        public static final int action_settings=0x7f0b00c3;
         public static final int app_chartview=0x7f0b00aa;
         public static final int app_content=0x7f0b001c;
         public static final int appoint_item_content=0x7f0b0022;
@@ -194,6 +194,7 @@ public final class R {
         public static final int emr_tab_mark=0x7f0b0052;
         public static final int emr_tab_unread=0x7f0b0050;
         public static final int emr_table=0x7f0b0017;
+        public static final int horizontalScrollView=0x7f0b00bc;
         public static final int image_grid_item_image=0x7f0b00b2;
         public static final int image_grid_item_title=0x7f0b00b3;
         public static final int image_leftRotate=0x7f0b001a;
@@ -297,16 +298,12 @@ public final class R {
         public static final int table3=0x7f0b0037;
         public static final int test_btn=0x7f0b0016;
         public static final int tooth_2d_img=0x7f0b00bb;
-        public static final int tooth_2d_tab=0x7f0b00bc;
-        public static final int tooth_2d_tab_illness1=0x7f0b00bd;
-        public static final int tooth_2d_tab_illness2=0x7f0b00be;
-        public static final int tooth_2d_tab_illness3=0x7f0b00bf;
-        public static final int tooth_2d_tab_illness4=0x7f0b00c0;
-        public static final int tooth_child_title=0x7f0b00c1;
-        public static final int tooth_father_arrow=0x7f0b00c3;
-        public static final int tooth_father_title=0x7f0b00c2;
-        public static final int tooth_permanentview=0x7f0b00c4;
-        public static final int tooth_primaryview=0x7f0b00c5;
+        public static final int tooth_2d_tab=0x7f0b00bd;
+        public static final int tooth_child_title=0x7f0b00be;
+        public static final int tooth_father_arrow=0x7f0b00c0;
+        public static final int tooth_father_title=0x7f0b00bf;
+        public static final int tooth_permanentview=0x7f0b00c1;
+        public static final int tooth_primaryview=0x7f0b00c2;
         public static final int tooth_tab=0x7f0b00ac;
         public static final int tooth_tab_2d=0x7f0b00af;
         public static final int tooth_tab_permanent=0x7f0b00ad;
@@ -349,11 +346,12 @@ public final class R {
         public static final int fragment_tooth=0x7f03001f;
         public static final int image_item=0x7f030020;
         public static final int image_list_item=0x7f030021;
-        public static final int tooth_2d=0x7f030022;
-        public static final int tooth_list_child_item=0x7f030023;
-        public static final int tooth_list_father_item=0x7f030024;
-        public static final int tooth_permanent=0x7f030025;
-        public static final int tooth_primary=0x7f030026;
+        public static final int radiobutton=0x7f030022;
+        public static final int tooth_2d=0x7f030023;
+        public static final int tooth_list_child_item=0x7f030024;
+        public static final int tooth_list_father_item=0x7f030025;
+        public static final int tooth_permanent=0x7f030026;
+        public static final int tooth_primary=0x7f030027;
     }
     public static final class menu {
         public static final int edit_allergy=0x7f0a0000;
@@ -424,6 +422,7 @@ public final class R {
         /**  电子病历tab样式 
          */
         public static final int emr_tab=0x7f090006;
+        public static final int radioButton=0x7f090008;
         /**  actionbar 背景 
          */
         public static final int style_bg_bar=0x7f090003;
