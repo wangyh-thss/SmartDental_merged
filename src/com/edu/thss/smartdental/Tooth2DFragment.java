@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.awt.Color;
 
+import com.edu.thss.smartdental.db.DBManager;
+import com.edu.thss.smartdental.model.general.SDToothInfo;
 import com.edu.thss.smartdental.model.tooth.ToothChartView;
 
 import android.app.AlertDialog;
@@ -55,9 +57,17 @@ public class Tooth2DFragment extends Fragment{
 	private Bitmap template;
 	private Bitmap tooth2D;
 	private ArrayList <Integer> pCode, pCoor, pColored;
+	private ArrayList <SDToothInfo> toothInfo;
 	private ImageView toothView;
 	private int currentSelectTooth, currentSelectColor;
+<<<<<<< HEAD
 	private RadioGroup radioGroup;
+=======
+	private FragmentManager fm = null; 
+	private RadioGroup radioGroup; 
+	
+	Context context;
+>>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 	
 	public Tooth2DFragment(){
 		
@@ -69,9 +79,9 @@ public class Tooth2DFragment extends Fragment{
 		int b = android.graphics.Color.blue(color);
 		if (r == g && r % 8 == 0 && g % 8 == 0){
 			if (b == 23)
-				return r / 8 + 32;
+				return (r / 8) + 1 + 32;
 			if (b == 233)
-				return r / 8;
+				return (r / 8) + 1;
 			return -1;
 		}
 		else
@@ -101,12 +111,12 @@ public class Tooth2DFragment extends Fragment{
 		for (int i = 0; i < w * h; ++i){
 			int code = getCode(pixels[i]);
 			if (code >= 0){
-				pCoor.add(i);
+				pCoor.add(i+1);
 				pCode.add(code);
 			}
-			if (code >= 0 && code < 32)
+			if (code > 0 && code <= 32)
 				pixels[i] = android.graphics.Color.rgb(255, 255, 255);
-			if (code >= 32)
+			if (code > 32)
 				pixels[i] = android.graphics.Color.rgb(233, 233, 233);
 		}
 		tooth2D.setPixels(pixels, 0, w, 0, 0, w, h);
@@ -145,6 +155,7 @@ public class Tooth2DFragment extends Fragment{
 		pColored.clear();
 	}
 	
+<<<<<<< HEAD
 	private void fillTooth(int code, int color, ImageView toothView) {
 		fill(code,color,toothView);
 		pColored.add(code);
@@ -217,6 +228,40 @@ public class Tooth2DFragment extends Fragment{
 			fillTooth(13,color,toothView);
 			fillTooth(1,color,toothView);
 			fillTooth(12,color,toothView);
+=======
+	
+	private void getToothInfoFromDB() {
+		DBManager mgr = new DBManager(this.context);
+		toothInfo = new ArrayList <SDToothInfo>();
+		mgr.openDatabase();
+		for (int i = 1; i <= 32; i++) {
+			SDToothInfo tooth = mgr.queryToothByPosition(i);
+			toothInfo.add(tooth);
+		}
+		mgr.closeDB();
+	}
+	
+	private ArrayList <Integer> getTeethArrayByIllness(int... illCodeList) {
+		ArrayList <Integer> illTeethList = new ArrayList <Integer>();
+		for (int i = 1; i < toothInfo.size(); i++) {
+			for (int illCode : illCodeList)
+				if (toothInfo.get(i).diagnose == illCode) {
+					illTeethList.add(toothInfo.get(i).position);
+					break;
+				}
+		}
+		return illTeethList;
+	}
+	
+	private void fillToothByIllness(int... illCodeList) {
+		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
+		int color = android.graphics.Color.rgb(255, 0, 0);
+		
+		clearToothColor();
+		for (int i = 0; i < illTeethList.size(); i++) {
+			fill(illTeethList.get(i), color, toothView);
+			pColored.add(illTeethList.get(i));
+>>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 		}
 	}
 
@@ -260,12 +305,18 @@ public class Tooth2DFragment extends Fragment{
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
 		RadioButton[] radioButton = new RadioButton[11];
 		
+		this.context = rootView.getContext();
+		
 		InitImage(toothView);
+<<<<<<< HEAD
 		initRadioButton(radioButton);
 
 		int[] illness = new int[]{0,1,2,3,10};
 		setIllnessVisible(radioButton, illness);
 		
+=======
+		getToothInfoFromDB();
+>>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 		toothView.setOnTouchListener(new OnTouchListener(){
 
 			@Override
@@ -296,7 +347,7 @@ public class Tooth2DFragment extends Fragment{
 				for (int i = 0; i < pCoor.size(); ++i){
 					if (pCoor.get(i) == y * imageW + x){
 						code = pCode.get(i);
-						if (code >= 32)
+						if (code > 32)
 							code -= 32;
 						break;
 					}
@@ -336,14 +387,19 @@ public class Tooth2DFragment extends Fragment{
 			}
 		});
 		
+<<<<<<< HEAD
 		radioGroup.check(1);
 		fillToothByIllness(0);
+=======
+		radioGroup.check(R.id.tooth_2d_tab_illness1);
+>>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 
 				switch(checkedId){
+<<<<<<< HEAD
 				case 1: fillToothByIllness(0); break;
 				case 2: fillToothByIllness(1); break;
 				case 3: fillToothByIllness(2); break;
@@ -355,6 +411,14 @@ public class Tooth2DFragment extends Fragment{
 				case 9: fillToothByIllness(8); break;
 				case 10: fillToothByIllness(9); break;
 				case 11: fillToothByIllness(10); break;
+=======
+				case R.id.tooth_2d_tab_illness1: clearToothColor(); break;
+				case R.id.tooth_2d_tab_illness2: fillToothByIllness(1); break;
+				case R.id.tooth_2d_tab_illness3: fillToothByIllness(2); break;
+				case R.id.tooth_2d_tab_illness4: 
+					fillToothByIllness(1, 2);
+					break;
+>>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 				}
                
 			}} );
