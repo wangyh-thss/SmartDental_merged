@@ -60,14 +60,10 @@ public class Tooth2DFragment extends Fragment{
 	private ArrayList <SDToothInfo> toothInfo;
 	private ImageView toothView;
 	private int currentSelectTooth, currentSelectColor;
-<<<<<<< HEAD
-	private RadioGroup radioGroup;
-=======
 	private FragmentManager fm = null; 
 	private RadioGroup radioGroup; 
 	
 	Context context;
->>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 	
 	public Tooth2DFragment(){
 		
@@ -155,81 +151,6 @@ public class Tooth2DFragment extends Fragment{
 		pColored.clear();
 	}
 	
-<<<<<<< HEAD
-	private void fillTooth(int code, int color, ImageView toothView) {
-		fill(code,color,toothView);
-		pColored.add(code);
-	}
-	
-	private void fillToothByIllness(int illCode) {
-		clearToothColor();
-		if (illCode == 0){
-			
-		}
-		else if(illCode == 1){
-			int color = android.graphics.Color.rgb(255, 0, 0);
-			fillTooth(0,color,toothView);
-			fillTooth(10,color,toothView);
-			fillTooth(20,color,toothView);
-		}
-		else if(illCode == 2){
-			int color = android.graphics.Color.rgb(0, 255, 0);
-			fillTooth(2,color,toothView);
-			fillTooth(12,color,toothView);
-			fillTooth(22,color,toothView);
-		}
-		else if(illCode == 3){
-			int color = android.graphics.Color.rgb(0, 0, 255);
-			fillTooth(3,color,toothView);
-			fillTooth(31,color,toothView);
-			fillTooth(17,color,toothView);
-		}
-		else if(illCode == 4){
-			int color = android.graphics.Color.rgb(255, 255, 0);
-			fillTooth(0,color,toothView);
-			fillTooth(10,color,toothView);
-			fillTooth(20,color,toothView);
-		}
-		else if(illCode == 5){
-			int color = android.graphics.Color.rgb(0, 255, 255);
-			fillTooth(2,color,toothView);
-			fillTooth(12,color,toothView);
-			fillTooth(22,color,toothView);
-		}
-		else if(illCode == 6){
-			int color = android.graphics.Color.rgb(255, 0, 255);
-			fillTooth(3,color,toothView);
-			fillTooth(31,color,toothView);
-			fillTooth(17,color,toothView);
-		}
-		else if(illCode == 7){
-			int color = android.graphics.Color.rgb(255, 128, 64);
-			fillTooth(0,color,toothView);
-			fillTooth(10,color,toothView);
-			fillTooth(20,color,toothView);
-		}
-		else if(illCode == 8){
-			int color = android.graphics.Color.rgb(64, 128, 255);
-			fillTooth(2,color,toothView);
-			fillTooth(12,color,toothView);
-			fillTooth(22,color,toothView);
-		}
-		else if(illCode == 9){
-			int color = android.graphics.Color.rgb(128, 64, 255);
-			fillTooth(3,color,toothView);
-			fillTooth(31,color,toothView);
-			fillTooth(17,color,toothView);
-		}
-		else{
-			int color = android.graphics.Color.rgb(0, 0, 0);
-			fillTooth(3,color,toothView);
-			fillTooth(31,color,toothView);
-			fillTooth(17,color,toothView);
-			fillTooth(13,color,toothView);
-			fillTooth(1,color,toothView);
-			fillTooth(12,color,toothView);
-=======
-	
 	private void getToothInfoFromDB() {
 		DBManager mgr = new DBManager(this.context);
 		toothInfo = new ArrayList <SDToothInfo>();
@@ -261,7 +182,6 @@ public class Tooth2DFragment extends Fragment{
 		for (int i = 0; i < illTeethList.size(); i++) {
 			fill(illTeethList.get(i), color, toothView);
 			pColored.add(illTeethList.get(i));
->>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 		}
 	}
 
@@ -308,15 +228,12 @@ public class Tooth2DFragment extends Fragment{
 		this.context = rootView.getContext();
 		
 		InitImage(toothView);
-<<<<<<< HEAD
 		initRadioButton(radioButton);
-
+		getToothInfoFromDB();
 		int[] illness = new int[]{0,1,2,3,10};
 		setIllnessVisible(radioButton, illness);
+
 		
-=======
-		getToothInfoFromDB();
->>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
 		toothView.setOnTouchListener(new OnTouchListener(){
 
 			@Override
@@ -387,20 +304,15 @@ public class Tooth2DFragment extends Fragment{
 			}
 		});
 		
-<<<<<<< HEAD
 		radioGroup.check(1);
-		fillToothByIllness(0);
-=======
-		radioGroup.check(R.id.tooth_2d_tab_illness1);
->>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
+		
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 
 				switch(checkedId){
-<<<<<<< HEAD
-				case 1: fillToothByIllness(0); break;
+				case 1: clearToothColor(); break;
 				case 2: fillToothByIllness(1); break;
 				case 3: fillToothByIllness(2); break;
 				case 4: fillToothByIllness(3); break;
@@ -411,14 +323,7 @@ public class Tooth2DFragment extends Fragment{
 				case 9: fillToothByIllness(8); break;
 				case 10: fillToothByIllness(9); break;
 				case 11: fillToothByIllness(10); break;
-=======
-				case R.id.tooth_2d_tab_illness1: clearToothColor(); break;
-				case R.id.tooth_2d_tab_illness2: fillToothByIllness(1); break;
-				case R.id.tooth_2d_tab_illness3: fillToothByIllness(2); break;
-				case R.id.tooth_2d_tab_illness4: 
-					fillToothByIllness(1, 2);
-					break;
->>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
+				
 				}
                
 			}} );

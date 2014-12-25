@@ -30,41 +30,8 @@
 	        
 	    </RadioGroup>
 
-<<<<<<< HEAD
 	    
     </HorizontalScrollView>
     
-=======
-    <RadioGroup
-        android:id="@+id/tooth_2d_tab"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness1"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="无" />
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness2"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="牙体缺损" />
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness3"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="牙列缺损" />
-
-        <RadioButton
-            android:id="@+id/tooth_2d_tab_illness4"
-            style="@style/emr_tab"
-            android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="全部" />
-    </RadioGroup>
->>>>>>> 788320c17cee67eb826073bc1b436723ee9c98b2
+    
 </LinearLayout>
