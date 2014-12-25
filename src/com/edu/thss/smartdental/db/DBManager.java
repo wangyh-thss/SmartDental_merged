@@ -99,6 +99,7 @@ public class DBManager {
 		c.close();
 		return patients;
 	}
+
 	public SDPatient queryByName(String name){
 		SDPatient patient = new SDPatient();
 		String[] columns = {"idNum","name","birth","bloodType"};
@@ -116,20 +117,65 @@ public class DBManager {
 		return patient;
 	}
 	
-	public SDToothInfo queryToothByPosition(int id) {
+	public List<SDToothInfo> queryTeethByDiseaseId(int disease) {
+		ArrayList<SDToothInfo> teeth  = new ArrayList<SDToothInfo>();
+		Cursor c = db.rawQuery("SELECT * FROM tooth", null);
+		while(c.moveToNext()){
+			SDToothInfo tooth = new SDToothInfo();
+			tooth.patientId = c.getInt(c.getColumnIndex("patientId"));
+			tooth.position = c.getInt(c.getColumnIndex("position"));
+			tooth.name = c.getString(c.getColumnIndex("name"));
+			tooth.state = c.getString(c.getColumnIndex("state"));
+			tooth.diagnose = c.getString(c.getColumnIndex("diagnose"));
+			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
+			tooth.recordId = c.getString(c.getColumnIndex("recordId"));
+			tooth.knowledgeId = c.getString(c.getColumnIndex("recordId"));
+			if (tooth.diagnose == disease) {
+				teeth.add(tooth);
+			}
+		}
+		c.close();
+		return teeth;
+	}
+
+	public SDToothInfo queryToothByPosition(int position) {
 		SDToothInfo tooth = new SDToothInfo();
-		Cursor c = db.rawQuery("select * from tooth where position = " + id, null);
+		Cursor c = db.rawQuery("select * from tooth where position = " + position, null);
 		if (c.getCount() > 0) {
 			c.moveToNext();
 			tooth.position = c.getInt(c.getColumnIndex("position"));
 			tooth.name = c.getString(c.getColumnIndex("name"));
 			tooth.state = c.getString(c.getColumnIndex("state"));
-			tooth.lost_state = c.getString(c.getColumnIndex("lost_state"));
-			tooth.disaster = c.getString(c.getColumnIndex("disaster"));
+			tooth.diagnose = c.getString(c.getColumnIndex("diagnose"));
 			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
-			tooth.commonsense = c.getString(c.getColumnIndex("commonsense"));
+			tooth.recordId = c.getString(c.getColumnIndex("recordId"));
+			tooth.knowledgeId = c.getString(c.getColumnIndex("knowledgeId"));
 		}
 		c.close();
 		return tooth;
+	}
+
+	public SDDisease queryDiseaseById(int id) {
+		SDDisease disease = new SDDisease();
+		Cursor c = db.rawQuery("select * from disease where id = " + id, null);
+		if (c.getCount() > 0) {
+			c.moveToNext();
+			disease.id = c.getInt(c.getColumnIndex("id"));
+			disease.name = c.getInt(c.getColumnIndex("name"));
+		}
+		c.close();
+		return disease;
+	}
+
+	public SDKnowledge queryKnowledgeById(int id) {
+		SDKnowledge knowledge = new SDKnowledge();
+		Cursor c = db.rawQuery("select * from knowledge where id = " + id, null);
+		if (c.getCount() > 0) {
+			c.moveToNext();
+			knowledge.id = c.getInt(c.getColumnIndex("id"));
+			knowledge.content = c.getInt(c.getColumnIndex("content"));
+		}
+		c.close();
+		return knowledge;
 	}
 }

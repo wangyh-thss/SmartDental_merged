@@ -4,8 +4,8 @@ public class SDToothInfo {
 	public int position;
 	public String name;
 	public String state;
-	public String lost_state;
-	public String disaster;
+	public int diagnose;
 	public String treatment;
-	public String commonsense;
+	public int recordId;
+	public int knowledgeId;
 }
