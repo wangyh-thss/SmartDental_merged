@@ -23,19 +23,19 @@
             android:id="@+id/tooth_2d_tab_illness1"
             style="@style/emr_tab"
             android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="牙龈炎" />
+            android:text="无" />
 
         <RadioButton
             android:id="@+id/tooth_2d_tab_illness2"
             style="@style/emr_tab"
             android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="牙周炎" />
+            android:text="牙体缺损" />
 
         <RadioButton
             android:id="@+id/tooth_2d_tab_illness3"
             style="@style/emr_tab"
             android:drawableBottom="@drawable/emr_tab_bottom"
-            android:text="龋齿" />
+            android:text="牙列缺损" />
 
         <RadioButton
             android:id="@+id/tooth_2d_tab_illness4"
