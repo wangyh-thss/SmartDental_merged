@@ -126,7 +126,6 @@ public class DBManager {
 		Cursor c = db.rawQuery("SELECT * FROM tooth", null);
 		while(c.moveToNext()){
 			SDToothInfo tooth = new SDToothInfo();
-			tooth.patientId = c.getInt(c.getColumnIndex("patientId"));
 			tooth.position = c.getInt(c.getColumnIndex("position"));
 			tooth.name = c.getString(c.getColumnIndex("name"));
 			tooth.state = c.getString(c.getColumnIndex("state"));
