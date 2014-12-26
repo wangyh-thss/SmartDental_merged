@@ -8,6 +8,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.edu.thss.smartdental.R;
 import com.edu.thss.smartdental.model.general.*;
 
@@ -177,5 +181,24 @@ public class DBManager {
 		}
 		c.close();
 		return knowledge;
+	}
+
+	public void updateDatabase(String data) throws JSONException {
+		JSONArray jsonArray = new JSONArray(data);
+		
+		db.rawQuery("delete from tooth", null);
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject jsonObj = jsonArray.getJSONObject(i);
+			int position = jsonObj.getInt("position");
+			String name = jsonObj.getString("name");
+			String state = jsonObj.getString("state");
+			int diagnose = jsonObj.getInt("diagnose");
+			String treatment = jsonObj.getString("treatment");
+			int recordId = jsonObj.getInt("recordId");
+			int knowledgeId = jsonObj.getInt("knowledgeId");
+			db.rawQuery("insert into tooth values(" + position + ",\""+ name + "\","
+				+ ",\""+ state + "\"," + diagnose + ",\""+ treatment + "\","
+				+ recordId + "," + knowledgeId, null);
+		}
 	}
 }
