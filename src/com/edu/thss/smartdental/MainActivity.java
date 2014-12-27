@@ -1,6 +1,53 @@
 package com.edu.thss.smartdental;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
+
+import com.edu.thss.smartdental.db.DBManager;
+import com.edu.thss.smartdental.model.tooth.ToothChartView;
+import com.edu.thss.smartdental.ui.drawer.NavDrawerItem;
+import com.edu.thss.smartdental.ui.drawer.NavDrawerListAdapter;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;  
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;  
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;  
+import org.apache.http.client.methods.HttpGet;  
+import org.apache.http.client.methods.HttpPost;  
+import org.apache.http.impl.client.DefaultHttpClient;  
+import org.apache.http.message.BasicNameValuePair;  
+import org.apache.http.protocol.HTTP;  
+import org.apache.http.util.EntityUtils;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.edu.thss.smartdental.model.tooth.ToothChartView;
 import com.edu.thss.smartdental.ui.drawer.NavDrawerItem;
@@ -39,6 +86,8 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 	private NavDrawerListAdapter mAdapter;
 	private ActionBarDrawerToggle mDrawerToggle;
 
+	private TextView textView;
+	private Handler handler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +99,47 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 			selectItem(0);
 		}
 		
+		handler = new Handler(){
+		    @Override
+		    public void handleMessage(Message msg) {
+		        super.handleMessage(msg);
+		        Bundle data = msg.getData();
+		        String val = data.getString("result");
+		        textView.setText(val);
+		    }
+		};
+		
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				HttpClient client = new DefaultHttpClient();  
+		        String getURL = "http://166.111.80.119/userinfo?user=huahua";
+		        HttpGet get = new HttpGet(getURL);
+		        String tString = "";
+		        Context c = textView.getContext();
+		        DBManager mgr = new DBManager(c);
+		        try {
+					HttpResponse responseGet = client.execute(get);  
+			        HttpEntity resEntityGet = responseGet.getEntity();  
+			        if (resEntityGet != null) {  
+			                    //do something with the response
+			        	tString = EntityUtils.toString(resEntityGet);
+			        	mgr.updateDatabase(tString);
+			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
+			        	Log.v("printtstring", tString);
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		        Message message = new Message();
+		        Bundle data = new Bundle();
+		        data.putString("result", tString);
+		        message.setData(data);
+		        handler.sendMessage(message);
+			}
+		};
+		new Thread(runnable).start();
 	}
 	
 	@SuppressLint("NewApi")

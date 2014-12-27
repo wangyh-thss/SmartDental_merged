@@ -1,16 +1,19 @@
 package com.edu.thss.smartdental;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.awt.Color;
 
 import com.edu.thss.smartdental.db.DBManager;
+import com.edu.thss.smartdental.model.general.SDDisease;
 import com.edu.thss.smartdental.model.general.SDToothInfo;
 import com.edu.thss.smartdental.model.tooth.ToothChartView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -156,64 +159,91 @@ public class Tooth2DFragment extends Fragment{
 		toothInfo = new ArrayList <SDToothInfo>();
 		mgr.openDatabase();
 		for (int i = 1; i <= 32; i++) {
-			SDToothInfo tooth = mgr.queryToothByPosition(i);
-			toothInfo.add(tooth);
+			List<SDToothInfo> tooth = mgr.queryToothByPosition(i);
+			for(int j = 0; j < tooth.size(); j++){
+				toothInfo.add(tooth.get(j));
+			}
 		}
 		mgr.closeDB();
 	}
 	
-	private ArrayList <Integer> getTeethArrayByIllness(int... illCodeList) {
+	private ArrayList <Integer> getTeethArrayByIllness(ArrayList <Integer> illCodeList) {
 		ArrayList <Integer> illTeethList = new ArrayList <Integer>();
-		for (int i = 1; i < toothInfo.size(); i++) {
-			for (int illCode : illCodeList)
-				if (toothInfo.get(i).diagnose == illCode) {
+		for (int i = 0; i < toothInfo.size(); i++) {
+			for (int illCode = 0; illCode < illCodeList.size(); illCode++)
+				if (toothInfo.get(i).diagnose == illCodeList.get(illCode)-1) {
 					illTeethList.add(toothInfo.get(i).position);
 					break;
 				}
 		}
+
 		return illTeethList;
 	}
 	
-	private void fillToothByIllness(int... illCodeList) {
-		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
-		int color = android.graphics.Color.rgb(255, 0, 0);
+	private ArrayList <Integer> getDiagnoseArrayByIllness() {
+		ArrayList <Integer> illCodeList = new ArrayList <Integer>();
+		for (int i = 0; i < toothInfo.size(); i++) {
+			if ((!illCodeList.contains(toothInfo.get(i).diagnose))&&(toothInfo.get(i).diagnose!=0)) {
+				illCodeList.add(toothInfo.get(i).diagnose);
+			}
+		}
 		
-		clearToothColor();
-		for (int i = 0; i < illTeethList.size(); i++) {
-			fill(illTeethList.get(i), color, toothView);
-			pColored.add(illTeethList.get(i));
+		return illCodeList;
+	}
+	
+	private void fillToothByIllness(ArrayList <Integer> illCodeList) {
+		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
+		int color = android.graphics.Color.rgb(0, 0, 255);
+		if(illCodeList.get(0) == 1){
+			clearToothColor();
+			for(int i = 0; i < 32; i++){
+				if(!illTeethList.contains(i)){
+					fill(i, color, toothView);
+					pColored.add(i);
+				}
+			}
+		}
+		else{
+			clearToothColor();
+			for (int i = 0; i < illTeethList.size(); i++) {
+				fill(illTeethList.get(i), color, toothView);
+				pColored.add(illTeethList.get(i));
+			}
 		}
 	}
 
-	private void initRadioButton(RadioButton[] radioButton){
-		String[] buttonText = new String[]{
-			"牙齿图",
-			"牙体缺损",
-			"牙列缺损",
-			"牙龈炎",
-			"牙周炎",
-			"牙髓炎",
-			"龋齿",
-			"未知牙病一",
-			"未知牙病二",
-			"未知牙病三",
-			"全部"
-		};
-		for(int i=0; i<11; i++){
-			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
-			radioButton[i].setId(i+1);
-			radioButton[i].setText(buttonText[i]);
-			radioGroup.addView(radioButton[i]);
-		}
-	}
-	
-	private void setIllnessVisible(RadioButton[] radioButton, int[] illness){
+	private void initRadioButton(RadioButton[] radioButton, ArrayList <Integer> illCodeList){
+		DBManager mgr = new DBManager(this.context);
+		mgr.openDatabase();
+		SDDisease disease = new SDDisease();
+		String buttonText = new String();
 		int width = getResources().getDisplayMetrics().widthPixels;
-		for(int i=0; i<illness.length; i++){
-			radioButton[illness[i]].setVisibility(View.VISIBLE);
-			if(illness.length<4){
-				radioButton[illness[i]].setWidth(width/illness.length);
+		radioButton[0]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+		radioButton[0].setId(0);
+		radioButton[0].setText("牙齿图");
+		radioGroup.addView(radioButton[0]);
+		
+		if(illCodeList.size()<2){
+			radioButton[0].setWidth(width/(illCodeList.size()+2));
+			
+		}
+		for(int i=1; i<illCodeList.size()+1; i++){
+			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+			radioButton[i].setId(illCodeList.get(i-1)+1);
+			disease = mgr.queryDiseaseById(illCodeList.get(i-1));
+			buttonText = disease.name;
+			radioButton[i].setText(buttonText);
+			radioGroup.addView(radioButton[i]);
+			if(illCodeList.size()<2){
+				radioButton[i].setWidth(width/(illCodeList.size()+2));
 			}
+		}
+		radioButton[illCodeList.size()+1]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+		radioButton[illCodeList.size()+1].setId(1);
+		radioButton[illCodeList.size()+1].setText("全部");
+		radioGroup.addView(radioButton[illCodeList.size()+1]);
+		if(illCodeList.size()<2){
+			radioButton[illCodeList.size()+1].setWidth(width/(illCodeList.size()+2));
 		}
 	}
 	
@@ -223,15 +253,16 @@ public class Tooth2DFragment extends Fragment{
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
-		RadioButton[] radioButton = new RadioButton[11];
+		
+		getToothInfoFromDB();
 		
 		this.context = rootView.getContext();
-		
 		InitImage(toothView);
-		initRadioButton(radioButton);
-		getToothInfoFromDB();
-		int[] illness = new int[]{0,1,2,3,10};
-		setIllnessVisible(radioButton, illness);
+		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
+		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
+		initRadioButton(radioButton, illCodeList);
+		
+		
 
 		
 		toothView.setOnTouchListener(new OnTouchListener(){
@@ -296,7 +327,7 @@ public class Tooth2DFragment extends Fragment{
 					case MotionEvent.ACTION_UP:
 						if (code >= 0){
 							fill(code, currentSelectColor, toothView);
-							showCustomDialog(code);
+							showCustomDialog(code, "hello");
 						}
 						break;
 				}
@@ -304,35 +335,32 @@ public class Tooth2DFragment extends Fragment{
 			}
 		});
 		
-		radioGroup.check(1);
+		radioGroup.check(0);
 		
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-				switch(checkedId){
-				case 1: clearToothColor(); break;
-				case 2: fillToothByIllness(1); break;
-				case 3: fillToothByIllness(2); break;
-				case 4: fillToothByIllness(3); break;
-				case 5: fillToothByIllness(4); break;
-				case 6: fillToothByIllness(5); break;
-				case 7: fillToothByIllness(6); break;
-				case 8: fillToothByIllness(7); break;
-				case 9: fillToothByIllness(8); break;
-				case 10: fillToothByIllness(9); break;
-				case 11: fillToothByIllness(10); break;
-				
+				ArrayList <Integer> illCodeList = new ArrayList <Integer>();
+				ArrayList <Integer> illCodeList_ = getDiagnoseArrayByIllness();
+				if (checkedId == 0){
+					clearToothColor();
 				}
+				else {
+					
+					illCodeList.add(checkedId);
+					fillToothByIllness(illCodeList);
+				}
+				
                
 			}} );
 		
 		return rootView;
 	}
 	
-	protected void showCustomDialog(int code) {
-    	final Dialog dialog = new Dialog(super.getActivity());  
+	protected void showCustomDialog(int code, String caseId) {
+    	final Dialog dialog = new Dialog(super.getActivity());
+    	final String currentCaseId = caseId;
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);  
         dialog.setContentView(R.layout.dialoglayout);  
         Button button1 = (Button)dialog.findViewById(R.id.dialog_tooth_myinfo);
@@ -342,29 +370,42 @@ public class Tooth2DFragment extends Fragment{
         TextView number = (TextView)dialog.findViewById(R.id.dialog_tooth_code);
         number.setText(Integer.toString(code));
         
-        TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
-		tableLayout.setVisibility(View.GONE);
-		
-		
+        /*add text*/
+        DBManager mgr = new DBManager(super.getActivity());
+        mgr.openDatabase();
+        List<SDToothInfo> teeth = mgr.queryToothByPosition(code);
+        String name = teeth.get(0).name;
+        String state = teeth.get(0).state;
+        String diagnose = "";
+        
+        if(teeth.get(0).diagnose == 0)
+        	diagnose = "我是健康哒";
+        else{
+        	for(int i = 0; i < teeth.size(); i++){
+        	diagnose += mgr.queryDiseaseById(teeth.get(i).diagnose).name;
+        	if(i!=(teeth.size()-1))
+        		diagnose += " ";  	
+        	}
+        }
+        
+        ((TextView) dialog.findViewById(R.id.dialog_tooth_anterior)).setText(name);
+        ((TextView) dialog.findViewById(R.id.dialog_tooth_permanent)).setText(state);
+        ((TextView) dialog.findViewById(R.id.dialog_tooth_mesialshift)).setText(diagnose);
+
 		DisplayMetrics  dm = new DisplayMetrics();   
-	     //取锟矫达拷锟斤拷锟斤拷锟斤拷   
-	     super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
-	        
-	     //锟斤拷锟节的匡拷锟�   
+	    super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
 	    int screenWidth = dm.widthPixels;   
-	        
-	    //锟斤拷锟节高讹拷   
 	    int screenHeight = dm.heightPixels;          
 		
 		Window dialogWindow = dialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
 		
-		lp.x = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷X锟斤拷锟�
-	    lp.y = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷Y锟斤拷锟�
-	    lp.width = (int) (screenWidth*0.9); // 锟斤拷锟�
-	    lp.height = (int) (screenHeight*0.9); // 锟竭讹拷
-	    lp.alpha = 1.0f; // 透锟斤拷锟斤拷
+		lp.x = (int) (screenWidth*0.05);
+	    lp.y = (int) (screenWidth*0.05);
+	    lp.width = (int) (screenWidth*0.9);
+	    lp.height = (int) (screenHeight*0.8);
+	    lp.alpha = 1.0f;
 
         dialogWindow.setAttributes(lp);
         
@@ -372,26 +413,18 @@ public class Tooth2DFragment extends Fragment{
 		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				 TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table1);
-				 tableLayout.setVisibility(View.VISIBLE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table2);
-				 tableLayout.setVisibility(View.VISIBLE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
-				 tableLayout.setVisibility(View.GONE);
 			}
 		});
         button2.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				 TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
-				 tableLayout.setVisibility(View.VISIBLE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table1);
-				 tableLayout.setVisibility(View.GONE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table2);
-				 tableLayout.setVisibility(View.GONE);
+				Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putCharSequence("imageclass", currentCaseId);
+				intent.putExtras(bundle);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent);
 			}
 		}); 
         dialog.show();  

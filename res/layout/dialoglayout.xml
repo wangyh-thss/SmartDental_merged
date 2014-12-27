@@ -36,42 +36,19 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="10dp"
-            android:text="科普知识"
+            android:text="我的病历"
             android:textColor="#ffffff"
             android:background="@android:color/transparent" />
     </LinearLayout>
     
-	<TableLayout
-	    android:id="@+id/table3"
-        android:layout_width="fill_parent"
-     	android:layout_height="match_parent"
-     	android:shrinkColumns="*"
-     	android:padding="5dp"
-     	>
-        <TableRow 
-            android:background="@color/fragment_info_row_background"
-     	    android:layout_width="fill_parent"
-     	    android:layout_height="wrap_content"
-     	    android:layout_margin="1dp"
-     	    android:padding="0dp"
-     	    >
-            <TextView 
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="1.胆固醇水平过高不但会让你发胖，过多摄入胆固醇还可能导致牙周病。2.我们洗手时手上突然流血，通常会自己包扎或去看医生。但刷牙时刷出了血，大家却熟视无睹。而牙龈流血可能说明你患有牙周疾病。3.即使拥有健康牙龈，也应每半年看一次牙医，最好有自己固定的牙医，然而大部分人都做不到。4.在很多患者身上，能发现一个奇怪现象：牙周疾病往往对口腔后面的大牙产生严重影响，但是患者前面的牙齿却非常健康。原因是，我们只仔细刷别人可以看到的牙齿。5.牙医总告诉患有严重牙龈疾病的患者要剔牙，但是并非只有到了这个时候你才需要剔牙。这就像你经常需要把衬衣口袋底部清理干净一样，这样它就不会积存杂物。6.人们初次见面时，最先注意的是眼睛，然后是牙齿，排在第三位的才是头发。然而人们花在头发上的钱，却比花在牙齿上的钱要多得多。牙齿的功能远比头发重要。7.保持口腔卫生需要每天刷10分钟牙。然而成年人的平均刷牙时间只有2或3分钟，儿童刷牙的平均时间更短。8.抽烟的人经常会用薄荷糖或漱口水遮盖烟味，然而烟草发出的恶臭味已经侵入牙龈组织，而这些组织又分布在口腔里，因此用薄荷糖或漱口水是起不到护牙作用的。9.人们刷牙时经常只刷表面，很难刷到口腔较深处的噬菌区，但正是这个地方发出难闻的气味。所以，你必须每天用牙线，每半年清洗一下口腔。如果这些都做到了，但口中仍发出难闻的气味，就要从饮食着手，或查查是否存在其他健康问题。10.含有酒精的漱口水会使嘴巴发干，因此在使用半小时内，你的口气可能非常清新，但之后会变得难闻，甚至比以前更糟。"
-                android:textSize="16sp"
-    	        android:textColor="@color/app_blue"
-     	        android:gravity="center_vertical"
-     	        />
-        </TableRow>
-    </TableLayout>
-    
     <TableLayout
         android:id="@+id/table1"
         android:layout_width="fill_parent"
-     	android:layout_height="fill_parent"
+     	android:layout_height="wrap_content"
      	android:shrinkColumns="*"
-     	android:padding="5dp"
+     	android:paddingLeft="5dp"
+     	android:paddingRight="5dp"
+     	android:paddingTop="5dp"
      	>
         <TableRow
             android:background="@color/fragment_info_row_background"
@@ -185,49 +162,6 @@
             <TextView
                 android:layout_width="wrap_content"
     	        android:layout_height="fill_parent"
-    	        android:text="缺失状态"
-    	        android:textSize="16sp"
-    	        android:textColor="#cccccc"
-     	        android:gravity="center_vertical"/>
-            <TextView
-                android:id="@+id/dialog_tooth_permanent2"
-                android:layout_width="wrap_content"
-    	        android:layout_height="fill_parent"
-    	        android:layout_marginLeft="10dp"
-    	        android:text="存在"
-    	        android:textSize="16sp"
-    	        android:textColor="@color/app_blue"
-    	        android:padding="10dp"
-     	        android:gravity="center_vertical"/>
-            <TextView
-                android:id="@+id/dialog_tooth_primary2"
-                android:layout_width="wrap_content"
-    	        android:layout_height="fill_parent"
-    	        android:padding="10dp"
-    	        android:text=""
-    	        android:textSize="16sp"
-    	        android:textColor="#cccccc"
-     	        android:gravity="center_vertical"/>
-            <TextView
-                android:id="@+id/dialog_tooth_primary3"
-                android:layout_width="wrap_content"
-    	        android:layout_height="fill_parent"
-    	        android:padding="10dp"
-    	        android:text=""
-    	        android:textSize="16sp"
-    	        android:textColor="#cccccc"
-     	        android:gravity="center_vertical"/>
-        </TableRow>
-        <TableRow
-            android:background="@color/fragment_info_row_background"
-     	    android:layout_width="fill_parent"
-     	    android:layout_height="wrap_content"
-     	    android:layout_margin="1dp"
-     	    android:padding="0dp"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-    	        android:layout_height="fill_parent"
     	        android:text="牙齿疾病"
     	        android:textSize="16sp"
     	        android:textColor="#cccccc"
@@ -249,7 +183,8 @@
         android:layout_width="fill_parent"
      	android:layout_height="fill_parent"
      	android:shrinkColumns="*"
-     	android:padding="5dp"
+     	android:paddingLeft="5dp"
+     	android:paddingRight="5dp"
      	>
         <TableRow
             android:background="@color/fragment_info_row_background"
