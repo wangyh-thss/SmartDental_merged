@@ -10,21 +10,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 @SuppressLint("DrawAllocation")
 public class ToothChartView extends View{
 	ToothChartSurface surface;
-	public Bitmap bgImg;
-	public Bitmap queryImg;
-	public int touchX, touchY;
-	public float scale;
 	private ArrayList<ToothGraphic> listToothGraphics;
 
 	public ToothChartView(Context context) {
@@ -42,17 +36,13 @@ public class ToothChartView extends View{
 		Log.i("l","hao");
 		try {
 			//»æÖÆÍ¼Æ¬
-			bgImg = BitmapFactory.decodeResource(getResources(),R.drawable.tooth_up);
-			//queryImg = BitmapFactory.decodeResource(getResources(),R.drawable.tooth_query);
+			Bitmap bgImg = BitmapFactory.decodeResource(getResources(),R.drawable.tooth_bg_5); 
 			
 			//Í¼Æ¬¿í¶È
 			int imgWidth = bgImg.getWidth();
-			Matrix matrix = new Matrix();
-			scale = (float)surface.width / (float)imgWidth;
-			System.out.println(scale);
-			matrix.setScale(scale, scale);			
+			int startx = (surface.width-imgWidth)/2;
 			
-			canvas.drawBitmap(bgImg, 0, 0, surface.bgPaint);
+			canvas.drawBitmap(bgImg, startx, 0, surface.bgPaint);
 			
 			/*
 			for(int i=0;i<this.listToothGraphics.size();i++){
@@ -63,32 +53,7 @@ public class ToothChartView extends View{
 			}
 			*/
 		   //»æÖÆÑÀ³Ý±àºÅ
-			/*
-			this.setOnTouchListener(new OnTouchListener(){
-
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch(event.getAction() & MotionEvent.ACTION_MASK){
-						case MotionEvent.ACTION_DOWN:
-							Log.i("x", event.getX()/scale+"");
-							Log.i("y", event.getY()/scale+"");
-							touchX = (int)(event.getX()/scale);
-							touchY = (int)(event.getY()/scale);
-							int color = bgImg.getPixel(touchX, touchY);
-							int red = (color & 0x00ff0000) >> 16;
-							int greed = (color & 0x0000ff00) >> 8;
-							int blue = color & 0x000000ff;
-							int toothIndex = red / 8;
-									
-							break;
-						
-					}
-					return false;
-				}
-				
-			});
-			*/
+			
 			super.onDraw(canvas);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,6 +61,9 @@ public class ToothChartView extends View{
 		
 	}
 	
+
+
+
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right,
 			int bottom) {

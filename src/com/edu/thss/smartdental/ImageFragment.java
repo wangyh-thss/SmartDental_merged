@@ -33,9 +33,19 @@ public class ImageFragment extends Fragment {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-				switch(checkedId){
-				case R.id.emr_tab_all: changeFragment(0); break;
-				//TODO ADD OTHER FRAGMENT
+				switch(checkedId-9){
+					case R.id.emr_tab_all: 
+						changeFragment(0); 
+						break;
+					case R.id.emr_tab_unread:
+						changeFragment(1);
+						break;
+					case R.id.emr_tab_hide:
+						changeFragment(2);
+						break;
+					case R.id.emr_tab_mark:
+						changeFragment(3);
+						break;
 				}
                
 			}} );
@@ -46,10 +56,7 @@ public class ImageFragment extends Fragment {
 	private void changeFragment(int index){
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		Fragment tempfragment = null;
-		switch(index){
-		case 0: tempfragment = new ImgTabAllFragment();break; //
-		default: break;
-		}
+		tempfragment = new ImgTabAllFragment(index);
 		if(tempfragment != null){
         	transaction.replace(R.id.img_tab_content, tempfragment);
         	transaction.commit();

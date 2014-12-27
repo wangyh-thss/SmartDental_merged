@@ -72,7 +72,7 @@ public class CalendarView extends View implements View.OnTouchListener{
         int todayIndex = -1;  
         calendar.setTime(curDate);  
         String curYearAndMonth = calendar.get(Calendar.YEAR) + ""  
-        		+ calendar.get(Calendar.MONTH);  
+                + calendar.get(Calendar.MONTH);  
         calendar.setTime(today);  
         String todayYearAndMonth = calendar.get(Calendar.YEAR) + ""  
                 + calendar.get(Calendar.MONTH);  
