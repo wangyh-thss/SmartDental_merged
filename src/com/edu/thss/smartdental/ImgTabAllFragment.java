@@ -2,12 +2,28 @@ package com.edu.thss.smartdental;
 
 import java.util.ArrayList;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import com.edu.thss.smartdental.adapter.EMRListAdapter;
 import com.edu.thss.smartdental.adapter.ImgListAdapter;
 import com.edu.thss.smartdental.model.EMRElement;
 import com.edu.thss.smartdental.model.ImageElement;
+import com.edu.thss.smartdental.model.general.GetUrlByTag;
+import com.edu.thss.smartdental.model.general.HttpGetProcess;
 
+import android.R.bool;
+import android.R.id;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,21 +39,66 @@ import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ImgTabAllFragment extends Fragment{
+	private int tagnum;
+	
 	private ImgListAdapter listAdapter;
 	private EditText editText;
 	private ListView list;
 	private ArrayList<ImageElement> images;
 	
-	@Override
+	private String JSON = "";	
+	
+	private String id = null;
+	private int num_of_pic = 0;
+	
+	private Handler handler;
+	
+	public ImgTabAllFragment(int tag) {
+		// TODO Auto-generated constructor stub
+		this.tagnum = tag;
+	}
+	
+	public void getJSON(String src){
+		//从网上获取的JSON中解析
+		try {
+			JSONTokener jsonParser = new JSONTokener(src);
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			id = jsonObj.getString("_id");
+			JSONArray info = jsonObj.getJSONArray("pic_info");
+			num_of_pic = info.length();
+			images = new ArrayList<ImageElement>(num_of_pic);
+			for (int i = 0; i < num_of_pic; i++) {
+				JSONObject jo = (JSONObject)info.optJSONObject(i);
+				boolean is_hidden = (jo.getInt("hide") == 1)? true:false;
+				boolean is_marked = (jo.getInt("record") == 1)? true:false;
+				boolean is_read = (jo.getInt("read") == 1)? true:false;
+				ImageElement tmpElement = new ImageElement(jo.getString("pic_name"), jo.getString("position"), jo.getString("date"), is_hidden, is_marked, is_read, jo.getString("caseid"));
+				images.add(tmpElement);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private class GetImagesInfo implements CallBackInterface{
+
+		@Override
+		public void CallBack(String src) {
+			// TODO Auto-generated method stub
+			getJSON(src);
+			listAdapter = new ImgListAdapter(images,ImgTabAllFragment.this.getActivity().getApplicationContext(), tagnum);
+			list.setAdapter(listAdapter);
+		}
+		
+	}
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_image_all, container,false);
 		editText = (EditText)rootView.findViewById(R.id.image_searchbox);
 		editText.addTextChangedListener(filterTextWatcher);
 		list = (ListView)rootView.findViewById(R.id.image_list);
-		initImages();
-		listAdapter = new ImgListAdapter(images,this.getActivity().getApplicationContext());
-		list.setAdapter(listAdapter);
 		
 		return rootView;
 	}
@@ -62,15 +123,13 @@ public class ImgTabAllFragment extends Fragment{
 		}
 	};
 
-	private void initImages(){
-		images = new ArrayList<ImageElement>();
-		ImageElement i = new ImageElement("活检1_*40","活体组织第一次检查，镜下*40","2011-1-15");
-		images.add(i);
-		i = new ImageElement("活检1_*100","活体组织第一次检查，镜下*100","2011-1-15");
-		images.add(i);
-		i = new ImageElement("活检2_*40","活体组织第二次检查，镜下*40","2012-1-25");
-		images.add(i);
-		i = new ImageElement("活检2_*100","活体组织第二次检查，镜下*100","2013-1-25");
-		images.add(i);
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		images = null;
+		new HttpGetProcess(handler, JSON, new GetUrlByTag().GetUrl(tagnum), new GetImagesInfo()).start();
 	}
+	
 }

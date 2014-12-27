@@ -86,7 +86,6 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 	private NavDrawerListAdapter mAdapter;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	private TextView textView;
 	private Handler handler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,47 +98,45 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 			selectItem(0);
 		}
 		
-		handler = new Handler(){
-		    @Override
-		    public void handleMessage(Message msg) {
-		        super.handleMessage(msg);
-		        Bundle data = msg.getData();
-		        String val = data.getString("result");
-		        textView.setText(val);
-		    }
-		};
-		
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				HttpClient client = new DefaultHttpClient();  
-		        String getURL = "http://166.111.80.119/userinfo?user=huahua";
-		        HttpGet get = new HttpGet(getURL);
-		        String tString = "";
-		        Context c = textView.getContext();
-		        DBManager mgr = new DBManager(c);
-		        try {
-					HttpResponse responseGet = client.execute(get);  
-			        HttpEntity resEntityGet = responseGet.getEntity();  
-			        if (resEntityGet != null) {  
-			                    //do something with the response
-			        	tString = EntityUtils.toString(resEntityGet);
-			        	mgr.updateDatabase(tString);
-			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
-			        	Log.v("printtstring", tString);
-			        }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		        Message message = new Message();
-		        Bundle data = new Bundle();
-		        data.putString("result", tString);
-		        message.setData(data);
-		        handler.sendMessage(message);
-			}
-		};
-		new Thread(runnable).start();
+//		handler = new Handler(){
+//		    @Override
+//		    public void handleMessage(Message msg) {
+//		        super.handleMessage(msg);
+//		        Bundle data = msg.getData();
+//		        String val = data.getString("result");
+//		    }
+//		};
+//		
+//		Runnable runnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				HttpClient client = new DefaultHttpClient();  
+//		        String getURL = "http://166.111.80.119/userinfo/tooth?user=baoye";
+//		        HttpGet get = new HttpGet(getURL);
+//		        String tString = "";
+//		        DBManager mgr = new DBManager(MainActivity.this);
+//		        try {
+//					HttpResponse responseGet = client.execute(get);  
+//			        HttpEntity resEntityGet = responseGet.getEntity();  
+//			        if (resEntityGet != null) {  
+//			                    //do something with the response
+//			        	tString = EntityUtils.toString(resEntityGet);
+//			        	mgr.updateDatabase(tString);
+//			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
+//			        	Log.v("printtstring", tString);
+//			        }
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//		        Message message = new Message();
+//		        Bundle data = new Bundle();
+//		        data.putString("result", tString);
+//		        message.setData(data);
+//		        handler.sendMessage(message);
+//			}
+//		};
+//		new Thread(runnable).start();
 	}
 	
 	@SuppressLint("NewApi")

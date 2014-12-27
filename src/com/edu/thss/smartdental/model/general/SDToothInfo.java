@@ -6,6 +6,6 @@ public class SDToothInfo {
 	public String state;
 	public int diagnose;
 	public String treatment;
-	public int recordId;
+	public String recordId;
 	public int knowledgeId;
 }

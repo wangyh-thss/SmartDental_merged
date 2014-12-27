@@ -1,48 +1,179 @@
 package com.edu.thss.smartdental;
 
+import java.awt.MultipleGradientPaint.ColorSpaceType;
+import java.awt.peer.CanvasPeer;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import com.edu.thss.smartdental.model.general.DrawNotateClass;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.R.integer;
+import android.R.xml;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.text.InputFilter.LengthFilter;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+//ã€ç”»å›¾ã€‘
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.view.View; 
+import android.graphics.BitmapFactory;  
+
 
 /**
- * Ò»ÕÅÍ¼Æ¬ä¯ÀÀÒ³Ãæ£¬ÊµÏÖËõ·Å¡¢ÍÏ¶¯¡¢×Ô¶¯¾ÓÖĞ
+ * ä¸€å¼ å›¾ç‰‡æµè§ˆé¡µé¢ï¼Œå®ç°ç¼©æ”¾ã€æ‹–åŠ¨ã€è‡ªåŠ¨å±…ä¸­
  * */
 public class OneImageActivity extends Activity implements OnTouchListener,OnClickListener{
 
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
+	
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	
 	private Matrix matrix = new Matrix();
 	private Matrix savedMatrix = new Matrix();
 	DisplayMetrics dm;
-	ImageView imgView;
-	Bitmap bitmap;
 	Button leftRotate;
 	Button rightRotate;
+	private Bitmap origin;
 	
-	float minScaleR; //×îĞ¡Ëõ·Å±ÈÀı
-	static final float MAX_SCALE = 4f; //×î´óËõ·Å±ÈÀı
+	float minScaleR; //æœ€å°ç¼©æ”¾æ¯”ä¾‹
+	static final float MAX_SCALE = 4f; //æœ€å¤§ç¼©æ”¾æ¯”ä¾‹
 	
-	static final int  NONE = 0;  //³õÊ¼×´Ì¬
-	static final int DRAG = 1; //ÍÏ¶¯
-	static final int ZOOM = 2; // Ëõ·Å
+	static final int  NONE = 0;  //åˆå§‹çŠ¶æ€
+	static final int DRAG = 1; //æ‹–åŠ¨
+	static final int ZOOM = 2; // ç¼©æ”¾
 	int mode = NONE;
 	
 	PointF prev = new PointF();
 	PointF mid = new PointF();
 	float dist = 1f;
 	
-	int rotate; //Ğı×ª½Ç¶È
+	int rotate; //æ—‹è½¬è§’åº¦
+	DownloadImageTask download;
+
+	private ImageView MarkedRect;
+	private TextView NotateInfoName;
+	private Handler handler;
+	private String[] notate_info;
+	private ArrayList<Integer> num_of_point;
+	private int notate_num;
+	private ArrayList<ArrayList<Integer>> pointX;
+	private ArrayList<ArrayList<Integer>> pointY;
+	
+	
+	public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+		ImageView bmImage;
+	    Bitmap bitmap;
+
+	    public DownloadImageTask(ImageView bmImage, Bitmap bitmap) {
+	        this.bmImage = bmImage;
+	        this.bitmap = bitmap;
+	    }
+
+	    protected Bitmap doInBackground(String... urls) {
+	        String urldisplay = urls[0];
+	        Bitmap mIcon11 = null;
+	        try {
+	            InputStream in = new java.net.URL(urldisplay).openStream();
+	            mIcon11 = BitmapFactory.decodeStream(in);
+	            this.bitmap = mIcon11;
+	        } catch (Exception e) {
+	            Log.e("Error", e.getMessage());
+	            e.printStackTrace();
+	        }
+	        return mIcon11;
+	    }
+	    
+	    protected void onPostExecute(Bitmap result) {
+	    	Bitmap tmp = result.copy(result.getConfig(), true);
+	    	origin = result.copy(result.getConfig(), true);
+	    	//DrawNotateClass draw = new DrawNotateClass(num_of_point, pointX, pointY);
+	    	
+	    	/*for(int i = 0;i < notate_num; i++){
+	    		draw.drawNotate(i, 1, tmp, Color.GRAY);   			
+	    	}
+	    	draw.drawNotate(0, 4, tmp, Color.RED); 
+	    	draw.drawNotate(1, 3, tmp, Color.BLUE);  
+	    	draw.drawNotate(2, 2, tmp, Color.GREEN); */ 
+	    	
+	        //bmImage.setImageBitmap(tmp);
+	    	selectItem(0);
+	        matrix.set(savedMatrix);
+			CheckView();
+			bmImage.setImageMatrix(matrix);
+			
+			UpdateNotateListView();
+	    }
+	}
+	
+	private void selectItem(int position) {
+		mDrawerLayout.closeDrawer(mDrawerList);
+		NotateInfoName.setText(notate_info[position]);
+		SetFocusOnNotationI(position);
+	}
+	
+	
+	private class DrawerItemClickListener implements
+		ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+	
+	private void UpdateNotateListView(){
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item_image, notate_info));
+	}
 	
 	
 	@Override
@@ -51,34 +182,127 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 		setContentView(R.layout.activity_one_image);
 		
 		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_bg));
-		imgView = (ImageView)findViewById(R.id.one_image_view);
-		//bitmap = BitmapFactory.decodeResource(getResources(), this.getIntent().getExtras().getInt("IMG")); //»ñÈ¡Í¼Æ¬×ÊÔ´
-		int tempclass = getIntent().getExtras().getInt("imageclass");
-		if(tempclass == 0){
-			bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1_1 ); //»ñÈ¡Í¼Æ¬×ÊÔ´
-		}
-		else if(tempclass == 1){
-			bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1_2 ); //»ñÈ¡Í¼Æ¬×ÊÔ´
-		}
-		else if(tempclass == 2){
-			bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1_3 ); //»ñÈ¡Í¼Æ¬×ÊÔ´
-		}
-		else if(tempclass == 3){
-			bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.img_1_4 ); //»ñÈ¡Í¼Æ¬×ÊÔ´
-		}
-		//bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.pic_1 ); //»ñÈ¡Í¼Æ¬×ÊÔ´
-		imgView.setImageBitmap(bitmap); //Ìî³ä¿Ø¼ş
-		imgView.setOnTouchListener(this); //´¥ÆÁ¼àÌı
+		
+		Intent intent = getIntent();
+		Bundle bundle = intent.getExtras();
+		final String tempclass = bundle.getString("imageclass");
+
+		mTitle = mDrawerTitle = getTitle();
+		notate_info = new String[1];
+		notate_info[0] = "æ²¡æœ‰æ ‡è®°";
+		notate_num = 0;
+		
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+		UpdateNotateListView();
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+		
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close){
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(mTitle);
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle(mDrawerTitle);
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		NotateInfoName = (TextView)findViewById(R.id.notate_info_name);
+		MarkedRect = (ImageView)findViewById(R.id.one_image_view);
+		handler = new Handler(){
+		    @Override
+			
+			public void handleMessage(Message msg) {
+		        super.handleMessage(msg);
+		        Bundle data = msg.getData();
+		        String JSON = data.getString("result");
+		        String id=null, caseid=null, picurl = null;
+		        
+		        try {
+					JSONTokener jsonParser = new JSONTokener(JSON);
+					JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+					id = jsonObj.getString("_id");
+					caseid = jsonObj.getString("caseid");
+					picurl = jsonObj.getString("picurl");
+					JSONArray notate = jsonObj.getJSONArray("notate");
+					notate_num = notate.length();
+					pointX = new ArrayList<ArrayList<Integer>>();
+					pointY = new ArrayList<ArrayList<Integer>>();
+					notate_info = new String [notate_num];
+					num_of_point = new ArrayList<Integer>();
+					for (int i = 0; i < notate_num; i++) {
+						JSONObject jo = (JSONObject)notate.optJSONObject(i);
+						JSONArray point = jo.getJSONArray("point");
+						num_of_point.add(point.length());
+						ArrayList<Integer> x = new ArrayList<Integer>();
+						ArrayList<Integer> y = new ArrayList<Integer>();
+						for (int j = 0; j < point.length(); j++) {
+							JSONObject jo1 = (JSONObject)point.optJSONObject(j);
+							x.add((int)jo1.getDouble("x"));
+							y.add((int)jo1.getDouble("y"));
+						}
+						pointX.add(x);
+						pointY.add(y);
+						notate_info[i] = "æ‰¹æ³¨" + (i+1) + ":" + jo.getString("data");
+					}
+					
+					download.execute("http://166.111.80.119/" + picurl);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+		    }
+		};
+		
+		
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				HttpClient client = new DefaultHttpClient();  
+		        String getURL = "http://166.111.80.119/getinfo?caseid=" + tempclass;
+		        HttpGet get = new HttpGet(getURL);
+		        String tString = "";
+		        try {
+					HttpResponse responseGet = client.execute(get);  
+			        HttpEntity resEntityGet = responseGet.getEntity();  
+			        if (resEntityGet != null) {  
+			        	tString = EntityUtils.toString(resEntityGet);
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		        Message message = new Message();
+		        Bundle data = new Bundle();
+		        data.putString("result", tString);
+		        message.setData(data);
+		        handler.sendMessage(message);
+			}
+		};
+		new Thread(runnable).start();
+		
+
+		Bitmap bitmap = BitmapFactory.decodeResource(OneImageActivity.this.getResources(),R.drawable.loading); //è·å–å›¾ç‰‡èµ„æº
+		download = new DownloadImageTask(MarkedRect, bitmap);
+		origin = bitmap.copy(bitmap.getConfig(), true);
+		
+		MarkedRect.setImageBitmap(download.bitmap); //å¡«å……æ§ä»¶
+		MarkedRect.setOnTouchListener(this); //è§¦å±ç›‘å¬
 		dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm); //»ñÈ¡·Ö±æÂÊ
+		getWindowManager().getDefaultDisplay().getMetrics(dm); //è·å–åˆ†è¾¨ç‡
 		minZoom();
 		center();
-		imgView.setImageMatrix(matrix);
+		MarkedRect.setImageMatrix(matrix);
 		leftRotate = (Button)findViewById(R.id.image_leftRotate);
 		rightRotate = (Button)findViewById(R.id.image_rightRotate);
 		leftRotate.setOnClickListener(this);
 		this.rightRotate.setOnClickListener(this);
-		
 	}
 
 	@Override
@@ -86,14 +310,14 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 		if(v.getId() == leftRotate.getId()){
 			//matrix.postRotate(-90,imgView.getWidth()/2,imgView.getHeight()/2);
 			matrix.postRotate(-90,dm.widthPixels/2,dm.heightPixels/2);
-			imgView.setImageMatrix(matrix);
+			MarkedRect.setImageMatrix(matrix);
 			savedMatrix.set(matrix);
 			mode = NONE;
 			CheckView();
 		}
 		else if(v.getId() == rightRotate.getId()){
 			matrix.postRotate(90,dm.widthPixels/2,dm.heightPixels/2);
-			imgView.setImageMatrix(matrix);
+			MarkedRect.setImageMatrix(matrix);
 			savedMatrix.set(matrix);
 			mode = NONE;
 			CheckView();
@@ -103,15 +327,15 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		switch(event.getAction()&MotionEvent.ACTION_MASK){
-		case MotionEvent.ACTION_DOWN: //Ö÷µã°´ÏÂ
+		case MotionEvent.ACTION_DOWN: //ä¸»ç‚¹æŒ‰ä¸‹
 			savedMatrix.set(matrix);
 			prev.set(event.getX(),event.getY());
 			mode = DRAG;
 			break;
-		case MotionEvent.ACTION_POINTER_DOWN: //¸±µã°´ÏÂ
+		case MotionEvent.ACTION_POINTER_DOWN: //å‰¯ç‚¹æŒ‰ä¸‹
 			dist = spacing(event);
 			if(dist > 10f){
-				//Á¬ĞøÁ½µãµÄ¾àÀë´óÓÚ10£¬¶àµãÄ£Ê½
+				//è¿ç»­ä¸¤ç‚¹çš„è·ç¦»å¤§äº10ï¼Œå¤šç‚¹æ¨¡å¼
 				savedMatrix.set(matrix);
 				midPoint(mid,event);
 				mode = ZOOM;
@@ -137,13 +361,13 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 			}
 			break;
 		}
-		imgView.setImageMatrix(matrix);
+		MarkedRect.setImageMatrix(matrix);
 		CheckView();
 		return true;
 		
 	}
 	/**
-	 * ÏŞÖÆ×î´ó×îĞ¡Ëõ·Å±ÈÀı£¬×Ô¶¯¾ÓÖĞ
+	 * é™åˆ¶æœ€å¤§æœ€å°ç¼©æ”¾æ¯”ä¾‹ï¼Œè‡ªåŠ¨å±…ä¸­
 	 * */
 	private void CheckView(){
 		float p[] = new float[9];
@@ -167,12 +391,12 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 		center();
 	}
 	/**
-	 * ×îĞ¡Ëõ·Å±ÈÀı
+	 * æœ€å°ç¼©æ”¾æ¯”ä¾‹
 	 * */
 	private void minZoom(){
 		minScaleR = Math.min(
-				(float)dm.widthPixels/(float)bitmap.getWidth(), 
-				(float)dm.heightPixels/(float)bitmap.getHeight());
+				(float)dm.widthPixels/(float)download.bitmap.getWidth(), 
+				(float)dm.heightPixels/(float)download.bitmap.getHeight());
 		if(minScaleR < 1.0){
 			matrix.postScale(minScaleR, minScaleR);
 		}
@@ -182,13 +406,13 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 	}
 	
 	/**
-	 * ºáÏò¡¢×İÏò¾ÓÖĞ
+	 * æ¨ªå‘ã€çºµå‘å±…ä¸­
 	 * */
 	protected void center(boolean horizontal, boolean vertical){
 		
 		Matrix m = new Matrix();
 		m.set(matrix);
-		RectF rect = new RectF(0,0,bitmap.getWidth(),bitmap.getHeight());
+		RectF rect = new RectF(0,0,download.bitmap.getWidth(),download.bitmap.getHeight());
 		m.mapRect(rect);
 		
 		float height = rect.height();
@@ -197,7 +421,7 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 		float deltaX = 0;
 		float deltaY = 0;
 		
-		// Í¼Æ¬Ğ¡ÓÚÆÁÄ»´óĞ¡£¬Ôò¾ÓÖĞÏÔÊ¾¡£´óÓÚÆÁÄ»£¬ÉÏ·½Áô¿ÕÔòÍùÉÏÒÆ£¬ÏÂ·½Áô¿ÕÔòÍùÏÂÒÆ
+		// å›¾ç‰‡å°äºå±å¹•å¤§å°ï¼Œåˆ™å±…ä¸­æ˜¾ç¤ºã€‚å¤§äºå±å¹•ï¼Œä¸Šæ–¹ç•™ç©ºåˆ™å¾€ä¸Šç§»ï¼Œä¸‹æ–¹ç•™ç©ºåˆ™å¾€ä¸‹ç§»
 		if(vertical){
 			int screenHeight = dm.heightPixels;
 			if(height<screenHeight){
@@ -207,7 +431,7 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 				deltaY = -rect.top;
 			}
 			else if(rect.bottom<screenHeight){
-				deltaY = imgView.getHeight() - rect.bottom;
+				deltaY = MarkedRect.getHeight() - rect.bottom;
 			}
 		}
 		if(horizontal){
@@ -226,7 +450,7 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 	}
 	
 	/**
-	 * Á½µãµÄ¾àÀë
+	 * ä¸¤ç‚¹çš„è·ç¦»
 	 * */
 	private float spacing(MotionEvent event){
 		float x = event.getX(0) - event.getX(1);
@@ -234,7 +458,7 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 		return FloatMath.sqrt(x*x+y*y);
 	}
 	/**
-	 * Á½µãµÄÖĞµã
+	 * ä¸¤ç‚¹çš„ä¸­ç‚¹
 	 * */
 	private void midPoint(PointF point, MotionEvent event){
 		float x = event.getX(0)+event.getX(1);
@@ -242,5 +466,38 @@ public class OneImageActivity extends Activity implements OnTouchListener,OnClic
 		point.set(x/2,y/2);
 	}
 
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onPostCreate(savedInstanceState);
+		mDrawerToggle.syncState();
+	}
+
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+	
+	private void SetFocusOnNotationI(int index) {
+		if (notate_num == 0) {
+			return;
+		}
+		int i;
+		Bitmap tmpBitmap = origin.copy(origin.getConfig(), true);
+		DrawNotateClass draw = new DrawNotateClass(num_of_point, pointX, pointY);
+		for (i = 0; i < notate_num; i++) {
+			if (i == index) {
+				draw.drawNotate(index, 5, tmpBitmap, Color.YELLOW);
+			}
+			else {
+				draw.drawNotate(i, 3, tmpBitmap, Color.GREEN);
+			}
+		}
+		MarkedRect.setImageBitmap(tmpBitmap);
+	}
 
 }

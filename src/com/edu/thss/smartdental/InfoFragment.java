@@ -2,6 +2,14 @@ package com.edu.thss.smartdental;
 
 import java.io.File;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+
 import com.edu.thss.smartdental.db.DBManager;
 import com.edu.thss.smartdental.model.general.SDPatient;
 import com.edu.thss.smartdental.util.Tools;
@@ -17,6 +25,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -42,6 +52,9 @@ public class InfoFragment extends Fragment{
 	private static final int EDIT_PASS_CODE = 6;
 	private static final int EDIT_ALLERGY_CODE = 7;
 	private static final int EDIT_FAMILY_CODE = 8;
+
+	private Handler handler;
+	private String tString = "";
 	
 	ImageView editbasic;
 	ImageView editextends;
@@ -105,7 +118,44 @@ public class InfoFragment extends Fragment{
 		}
 	};
 	public InfoFragment(){
+		handler = new Handler(){
+		    @Override
+		    public void handleMessage(Message msg) {
+		        super.handleMessage(msg);
+		        Bundle data = msg.getData();
+		        String val = data.getString("result");
+		    }
+		};
 		
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				HttpClient client = new DefaultHttpClient();  
+		        String getURL = "http://166.111.80.119/userinfo/tooth?user=baoye";
+		        HttpGet get = new HttpGet(getURL);
+		        
+		        try {
+					HttpResponse responseGet = client.execute(get);  
+			        HttpEntity resEntityGet = responseGet.getEntity();  
+			        if (resEntityGet != null) {  
+			                    //do something with the response
+			        	tString = EntityUtils.toString(resEntityGet);
+
+			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
+			        	//Log.v("printtstring", tString);
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		        Message message = new Message();
+		        Bundle data = new Bundle();
+		        data.putString("result", tString);
+		        message.setData(data);
+		        handler.sendMessage(message);
+			}
+		};
+		new Thread(runnable).start();
 	}
 
 	@Override
@@ -113,9 +163,19 @@ public class InfoFragment extends Fragment{
 			Bundle savedInstanceState) {
 		View rootView =inflater.inflate(R.layout.fragment_info, container,false);
 		
+		
+		
 		this.context = rootView.getContext();
 		mgr = new DBManager(this.context);
 	    mgr.openDatabase();
+	    
+	    try {
+			mgr.updateDatabase(tString);
+			} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
 		SDPatient patient= mgr.queryByName("Õı“ª");
 		Button upload = (Button)rootView.findViewById(R.id.infoupload);
 		faceImage = (ImageView)rootView.findViewById(R.id.infoImageItem);
@@ -141,6 +201,8 @@ public class InfoFragment extends Fragment{
 		editbasic.setOnClickListener(editlistener);
 		//this.context = rootView.getContext();
 		upload.setOnClickListener(listener);
+		
+		
 		
 		return rootView;
 	}

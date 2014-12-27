@@ -131,7 +131,7 @@ public class DBManager {
 			tooth.state = c.getString(c.getColumnIndex("state"));
 			tooth.diagnose = c.getInt(c.getColumnIndex("diagnose"));
 			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
-			tooth.recordId = c.getInt(c.getColumnIndex("recordId"));
+			tooth.recordId = c.getString(c.getColumnIndex("recordId"));
 			tooth.knowledgeId = c.getInt(c.getColumnIndex("recordId"));
 			if (tooth.diagnose == disease) {
 				teeth.add(tooth);
@@ -151,7 +151,7 @@ public class DBManager {
 			tooth.state = c.getString(c.getColumnIndex("state"));
 			tooth.diagnose = c.getInt(c.getColumnIndex("diagnose"));
 			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
-			tooth.recordId = c.getInt(c.getColumnIndex("recordId"));
+			tooth.recordId = c.getString(c.getColumnIndex("recordId"));
 			tooth.knowledgeId = c.getInt(c.getColumnIndex("knowledgeId"));
 			if (tooth.position == position) {
 				teeth.add(tooth);
@@ -187,23 +187,47 @@ public class DBManager {
 	}
 
 	public void updateDatabase(String data) throws JSONException {
-		JSONArray jsonArray = new JSONArray(data);
+		JSONArray jsonArray =new JSONArray(data);
 		
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObj = jsonArray.getJSONObject(i);
 			int position = jsonObj.getInt("position");
-
-			db.rawQuery("delete from tooth where position =" + position, null);
+			
+			String sql = new String("delete from tooth where position=" + position);
+			
+			db.execSQL(sql);
 			String name = jsonObj.getString("name");
-			String state = jsonObj.getString("state");
-			int diagnose = jsonObj.getInt("diagnose");
+			String state = jsonObj.getString("status");
+			
+			String disease = jsonObj.getString("diagnose");
+			int diagnose = 0;
+			int count = 0;
+			Cursor c = db.rawQuery("select * from disease", null);
+			while(c.moveToNext()) {
+				int cur_id = c.getInt(c.getColumnIndex("id"));
+				String cur_name = c.getString(c.getColumnIndex("name"));
+				if (cur_name.equals(disease)) {
+					diagnose = cur_id;
+				}
+				count++;
+			}
+			c.close();
+			if (diagnose == 0) {
+				diagnose = count+1;
+				sql = new String("insert into disease values(" + diagnose + ",\""+ disease + "\")");
+				db.execSQL(sql);
+			}
+			
 			String treatment = jsonObj.getString("treatment");
-			int recordId = jsonObj.getInt("recordId");
+			String recordId = jsonObj.getString("recordId");
 			int knowledgeId = 4;
 			//int knowledgeId = jsonObj.getInt("knowledgeId");
-			db.rawQuery("insert into tooth values(" + position + ",\""+ name + "\","
-				+ ",\""+ state + "\"," + diagnose + ",\""+ treatment + "\","
-				+ recordId + "," + knowledgeId, null);
+			sql = new String("insert into tooth values(" + position + ",\""+ name + "\"," + "\""
+					+ state + "\"," + diagnose + ",\""+ treatment + "\",\""
+					+ recordId + "\"," + knowledgeId + ");");
+			db.execSQL(sql);
+			
+			
 		}
 	}
 }

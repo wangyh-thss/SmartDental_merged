@@ -2,13 +2,26 @@ package com.edu.thss.smartdental.adapter;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import com.edu.thss.smartdental.CallBackInterface;
 import com.edu.thss.smartdental.OneEMRActivity;
 import com.edu.thss.smartdental.OneImageActivity;
 import com.edu.thss.smartdental.R;
 import com.edu.thss.smartdental.model.ImageElement;
+import com.edu.thss.smartdental.model.general.GetUrlByTag;
+import com.edu.thss.smartdental.model.general.HttpGetProcess;
+import com.edu.thss.smartdental.model.general.HttpPostProcess;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +32,7 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ImgListAdapter extends BaseAdapter implements Filterable{
@@ -32,10 +46,17 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 	private Context context;
 	private ImageFilter filter;
 	private buttonViewHolder holder;
+	private Handler handler;
+	private String post_result;
+	private String JSON = "";
+	private int tagnum;
 	
-	public ImgListAdapter(ArrayList<ImageElement> list, Context context){
+	public ImgListAdapter(ArrayList<ImageElement> list, Context context, int tag){
 		this.list = list;
 		this.context = context;
+		this.post_result = "";
+		this.JSON = "";
+		this.tagnum = tag;
 	}
 
 	@Override
@@ -132,6 +153,48 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 			
 		}
     }
+    
+    protected void ConfirmDeleteDialog(final String caseid) {
+		AlertDialog.Builder builder = new Builder(context);
+		builder.setMessage("确认删除？");
+		builder.setTitle("提示：");
+		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), caseid, "delete", "1").start();
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
+	}
+    
+    private class HandleAfterPost implements CallBackInterface{
+
+		@Override
+		public void CallBack(String src) {
+			// TODO Auto-generated method stub
+			if (src.equals("success")){
+				new HttpGetProcess(handler, JSON, new GetUrlByTag().GetUrl(tagnum), new UpdateImageInfo()).start();
+				Toast.makeText(context, "操作成功", Toast.LENGTH_SHORT).show();
+			}
+			else {
+				Toast.makeText(context, "操作失败", Toast.LENGTH_SHORT).show();
+			}
+		}
+    	
+    }
+    
+    
     class ButtonListner implements OnClickListener{
 		private int itemPosition;
 		public ButtonListner(int pos){
@@ -143,39 +206,85 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 			int vid = v.getId();
 			if(vid == holder.delete.getId()){
 			 //删除
-				list.remove(itemPosition);
-				notifyDataSetChanged();
+				//list.remove(itemPosition);
+				new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), list.get(itemPosition).caseID, "delete", "1").start();
+				//需要向服务器发post请求修改
+				//notifyDataSetChanged();
+				//ConfirmDeleteDialog(list.get(itemPosition).caseID);
 			}
 		    if(vid == holder.hide.getId()){
 		    	ImageElement temp = list.get(this.itemPosition);
-		    	if(temp.isHidden == false)
-		    	temp.isHidden = true;
-		    	else temp.isHidden = false;
-		    	list.set(this.itemPosition, temp);
-		    	notifyDataSetChanged();
+		    	if(temp.isHidden == false){
+		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "hide", "1").start();
+		    		//temp.isHidden = true;
+		    	}
+		    	else {
+		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "hide", "0").start();
+		    		//temp.isHidden = false;
+		    	}
+		    	//需要向服务器发post请求修改
+		    	//list.set(this.itemPosition, temp);
+		    	//notifyDataSetChanged();
 		    }
 		    if(vid == holder.mark.getId()){
 		    	
 		    	ImageElement temp = list.get(this.itemPosition);
-		    	if(temp.isMarked ==false)
-		    	temp.isMarked = true;
-		    	else temp.isMarked = false;
-		    	list.set(this.itemPosition, temp);
-		    	notifyDataSetChanged();
+		    	if(temp.isMarked ==false) {
+		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "record", "1").start();
+		    		//temp.isMarked = true;
+		    	}
+		    	else {
+		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "record", "0").start();
+		    		//temp.isMarked = false;
+		    	}
+		    	//需要向服务器发post请求修改
+		    	//list.set(this.itemPosition, temp);
+		    	//notifyDataSetChanged();
 		    }
 		    if(vid == holder.read.getId()){
 		    	ImageElement temp = list.get(this.itemPosition);
-		    	if(temp.isRead == false)
-		    	temp.isRead = true;
-		    	list.set(this.itemPosition, temp);
-		    	notifyDataSetChanged();
-		    	Intent intent = new Intent(context,OneImageActivity.class);
-		    	intent.putExtra("imageclass", this.itemPosition);
+		    	if(temp.isRead == false){
+		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "read", "1").start();
+		    		//temp.isRead = true;
+		    	}
+		    	//需要向服务器发post请求修改
+		    	//list.set(this.itemPosition, temp);
+		    	
+		    	//notifyDataSetChanged();
+		    	Intent intent = new Intent(context, OneImageActivity.class);
+		    	Bundle bundle = new Bundle();
+		    	bundle.putCharSequence("imageclass", list.get(this.itemPosition).caseID);
+		    	intent.putExtras(bundle);
 		    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 		    	context.startActivity(intent);
 		    }
-			
 		}
-		
 	}
+    
+    private class UpdateImageInfo implements CallBackInterface {
+
+		@Override
+		public void CallBack(String src) {
+			// TODO Auto-generated method stub
+			try {
+				JSONTokener jsonParser = new JSONTokener(src);
+				JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+				JSONArray info = jsonObj.getJSONArray("pic_info");
+				int num_of_pic = info.length();
+				list = new ArrayList<ImageElement>(num_of_pic);
+				for (int i = 0; i < num_of_pic; i++) {
+					JSONObject jo = (JSONObject)info.optJSONObject(i);
+					boolean is_hidden = (jo.getInt("hide") == 1)? true:false;
+					boolean is_marked = (jo.getInt("record") == 1)? true:false;
+					boolean is_read = (jo.getInt("read") == 1)? true:false;
+					ImageElement tmpElement = new ImageElement(jo.getString("pic_name"), jo.getString("position"), jo.getString("date"), is_hidden, is_marked, is_read, jo.getString("caseid"));
+					list.add(tmpElement);
+				}
+				notifyDataSetChanged();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+    }
 }

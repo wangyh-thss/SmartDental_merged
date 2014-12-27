@@ -1,50 +1,73 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_gravity="center"
-    android:background="@color/app_white"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    tools:context=".OneImageActivity" >
-    
-    <ImageView
-        android:id="@+id/one_image_view"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/one_image_op"
-        android:layout_gravity="center"
-        
-        android:scaleType = "matrix" />
-    <LinearLayout 
-        android:id="@+id/one_image_op"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        >
-
-       	<Button
-       	    android:id="@+id/image_leftRotate"
-       	    android:layout_width="match_parent"
-       	    android:layout_height="50dp"
-       	    android:layout_weight="1"
-       	    android:text="逆时针90"
-       	    android:background="@color/app_blue"
-       	    android:textColor="@color/app_white" />
-
-        <Button
-        android:id="@+id/image_rightRotate"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:text="顺时针90"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/app_white"
-        android:background="@color/app_blue"
-         /> 
-    </LinearLayout>
-   
+        android:layout_height="match_parent">
+		    
+		<RelativeLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_gravity="center"
+		    android:background="@color/app_white"
+		    android:paddingLeft="10dp"
+		    android:paddingRight="10dp" >
+		    <TextView android:id="@+id/notate_info_name"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"/>
+		    
+		    <ImageView
+		        android:id="@+id/one_image_view"
+		        android:layout_width="fill_parent"
+		        android:layout_height="match_parent"
+		        android:layout_alignParentTop="true"
+		        android:layout_above="@+id/one_image_op"
+		        android:layout_gravity="center"
+		        
+		        android:scaleType = "matrix" />
+		    <LinearLayout 
+		        android:id="@+id/one_image_op"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal"
+		        android:layout_alignParentBottom="true"
+		        >
+		
+		       	<Button
+		       	    android:id="@+id/image_leftRotate"
+		       	    android:layout_width="match_parent"
+		       	    android:layout_height="50dp"
+		       	    android:layout_weight="1"
+		       	    android:text="逆时针90"
+		       	    android:background="@color/app_blue"
+		       	    android:textColor="@color/app_white" />
+		
+		        <Button
+			        android:id="@+id/image_rightRotate"
+			        android:layout_width="match_parent"
+			        android:layout_height="50dp"
+			        android:layout_weight="1"
+			        android:text="顺时针90"
+			        android:layout_marginLeft="10dp"
+			        android:textColor="@color/app_white"
+			        android:background="@color/app_blue"
+		         /> 
+		    </LinearLayout>
+		   
+		</RelativeLayout>
+	</FrameLayout>
+	
+	<ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#111"/>
+</android.support.v4.widget.DrawerLayout>
 
-</RelativeLayout>

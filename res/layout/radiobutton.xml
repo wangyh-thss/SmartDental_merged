@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"  
     style="@style/radioButton"  
     android:drawableTop="@drawable/emr_tab_bottom"
+    android:visibility="gone"
     >  
       
 </RadioButton> 
