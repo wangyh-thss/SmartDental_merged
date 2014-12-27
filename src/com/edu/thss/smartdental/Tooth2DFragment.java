@@ -327,7 +327,13 @@ public class Tooth2DFragment extends Fragment{
 					case MotionEvent.ACTION_UP:
 						if (code >= 0){
 							fill(code, currentSelectColor, toothView);
-							showCustomDialog(code, "hello");
+							
+							DBManager mgr = new DBManager(context);
+							mgr.openDatabase();
+							SDToothInfo tooth = mgr.queryToothByPosition(code).get(0);
+							mgr.closeDB();
+							
+							showCustomDialog(code, tooth.recordId);
 						}
 						break;
 				}
