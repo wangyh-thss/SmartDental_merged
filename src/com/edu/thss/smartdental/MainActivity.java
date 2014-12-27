@@ -125,7 +125,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 			        if (resEntityGet != null) {  
 			                    //do something with the response
 			        	tString = EntityUtils.toString(resEntityGet);
-			        	//mgr.updateDatabase(tString);
+			        	mgr.updateDatabase(tString);
 			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
 			        	Log.v("printtstring", tString);
 			        }
