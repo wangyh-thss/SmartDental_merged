@@ -5,14 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.awt.Color;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import com.edu.thss.smartdental.db.DBManager;
+import com.edu.thss.smartdental.model.general.SDDisease;
 import com.edu.thss.smartdental.model.general.SDToothInfo;
 import com.edu.thss.smartdental.model.tooth.ToothChartView;
 
@@ -25,8 +19,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -167,64 +159,91 @@ public class Tooth2DFragment extends Fragment{
 		toothInfo = new ArrayList <SDToothInfo>();
 		mgr.openDatabase();
 		for (int i = 1; i <= 32; i++) {
-			SDToothInfo tooth = mgr.queryToothByPosition(i).get(0);
-			toothInfo.add(tooth);
+			List<SDToothInfo> tooth = mgr.queryToothByPosition(i);
+			for(int j = 0; j < tooth.size(); j++){
+				toothInfo.add(tooth.get(j));
+			}
 		}
 		mgr.closeDB();
 	}
 	
-	private ArrayList <Integer> getTeethArrayByIllness(int... illCodeList) {
+	private ArrayList <Integer> getTeethArrayByIllness(ArrayList <Integer> illCodeList) {
 		ArrayList <Integer> illTeethList = new ArrayList <Integer>();
-		for (int i = 1; i < toothInfo.size(); i++) {
-			for (int illCode : illCodeList)
-				if (toothInfo.get(i).diagnose == illCode) {
+		for (int i = 0; i < toothInfo.size(); i++) {
+			for (int illCode = 0; illCode < illCodeList.size(); illCode++)
+				if (toothInfo.get(i).diagnose == illCodeList.get(illCode)-1) {
 					illTeethList.add(toothInfo.get(i).position);
 					break;
 				}
 		}
+
 		return illTeethList;
 	}
 	
-	private void fillToothByIllness(int... illCodeList) {
-		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
-		int color = android.graphics.Color.rgb(255, 0, 0);
+	private ArrayList <Integer> getDiagnoseArrayByIllness() {
+		ArrayList <Integer> illCodeList = new ArrayList <Integer>();
+		for (int i = 0; i < toothInfo.size(); i++) {
+			if ((!illCodeList.contains(toothInfo.get(i).diagnose))&&(toothInfo.get(i).diagnose!=0)) {
+				illCodeList.add(toothInfo.get(i).diagnose);
+			}
+		}
 		
-		clearToothColor();
-		for (int i = 0; i < illTeethList.size(); i++) {
-			fill(illTeethList.get(i), color, toothView);
-			pColored.add(illTeethList.get(i));
+		return illCodeList;
+	}
+	
+	private void fillToothByIllness(ArrayList <Integer> illCodeList) {
+		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
+		int color = android.graphics.Color.rgb(0, 0, 255);
+		if(illCodeList.get(0) == 1){
+			clearToothColor();
+			for(int i = 0; i < 32; i++){
+				if(!illTeethList.contains(i)){
+					fill(i, color, toothView);
+					pColored.add(i);
+				}
+			}
+		}
+		else{
+			clearToothColor();
+			for (int i = 0; i < illTeethList.size(); i++) {
+				fill(illTeethList.get(i), color, toothView);
+				pColored.add(illTeethList.get(i));
+			}
 		}
 	}
 
-	private void initRadioButton(RadioButton[] radioButton){
-		String[] buttonText = new String[]{
-				"—¿≥›Õº",
-				"—¿ÃÂ»±À",
-				"—¿¡–»±À",
-				"—¿ˆ∏—◊",
-				"—¿÷‹—◊",
-				"—¿ÀË—◊",
-				"»£≥›",
-				"Œ¥÷™—¿≤°“ª",
-				"Œ¥÷™—¿≤°∂˛",
-				"Œ¥÷™—¿≤°»˝",
-				"»´≤ø"
-			};
-		for(int i=0; i<11; i++){
-			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
-			radioButton[i].setId(i+1);
-			radioButton[i].setText(buttonText[i]);
-			radioGroup.addView(radioButton[i]);
-		}
-	}
-	
-	private void setIllnessVisible(RadioButton[] radioButton, int[] illness){
+	private void initRadioButton(RadioButton[] radioButton, ArrayList <Integer> illCodeList){
+		DBManager mgr = new DBManager(this.context);
+		mgr.openDatabase();
+		SDDisease disease = new SDDisease();
+		String buttonText = new String();
 		int width = getResources().getDisplayMetrics().widthPixels;
-		for(int i=0; i<illness.length; i++){
-			radioButton[illness[i]].setVisibility(View.VISIBLE);
-			if(illness.length<4){
-				radioButton[illness[i]].setWidth(width/illness.length);
+		radioButton[0]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+		radioButton[0].setId(0);
+		radioButton[0].setText("ÁâôÈΩøÂõæ");
+		radioGroup.addView(radioButton[0]);
+		
+		if(illCodeList.size()<2){
+			radioButton[0].setWidth(width/(illCodeList.size()+2));
+			
+		}
+		for(int i=1; i<illCodeList.size()+1; i++){
+			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+			radioButton[i].setId(illCodeList.get(i-1)+1);
+			disease = mgr.queryDiseaseById(illCodeList.get(i-1));
+			buttonText = disease.name;
+			radioButton[i].setText(buttonText);
+			radioGroup.addView(radioButton[i]);
+			if(illCodeList.size()<2){
+				radioButton[i].setWidth(width/(illCodeList.size()+2));
 			}
+		}
+		radioButton[illCodeList.size()+1]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+		radioButton[illCodeList.size()+1].setId(1);
+		radioButton[illCodeList.size()+1].setText("ÂÖ®ÈÉ®");
+		radioGroup.addView(radioButton[illCodeList.size()+1]);
+		if(illCodeList.size()<2){
+			radioButton[illCodeList.size()+1].setWidth(width/(illCodeList.size()+2));
 		}
 	}
 	
@@ -234,15 +253,16 @@ public class Tooth2DFragment extends Fragment{
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
-		RadioButton[] radioButton = new RadioButton[11];
+		
+		getToothInfoFromDB();
 		
 		this.context = rootView.getContext();
-		
 		InitImage(toothView);
-		initRadioButton(radioButton);
-		getToothInfoFromDB();
-		int[] illness = new int[]{0,1,2,3,10};
-		setIllnessVisible(radioButton, illness);
+		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
+		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
+		initRadioButton(radioButton, illCodeList);
+		
+		
 
 		
 		toothView.setOnTouchListener(new OnTouchListener(){
@@ -307,14 +327,7 @@ public class Tooth2DFragment extends Fragment{
 					case MotionEvent.ACTION_UP:
 						if (code >= 0){
 							fill(code, currentSelectColor, toothView);
-							
-							DBManager mgr = new DBManager(context);
-							toothInfo = new ArrayList <SDToothInfo>();
-							mgr.openDatabase();
-							SDToothInfo tooth = mgr.queryToothByPosition(code).get(0);
-							mgr.closeDB();
-							
-							showCustomDialog(code, tooth.recordId);
+							showCustomDialog(code, "hello");
 						}
 						break;
 				}
@@ -322,27 +335,23 @@ public class Tooth2DFragment extends Fragment{
 			}
 		});
 		
-		radioGroup.check(1);
+		radioGroup.check(0);
 		
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-				switch(checkedId){
-				case 1: clearToothColor(); break;
-				case 2: fillToothByIllness(1); break;
-				case 3: fillToothByIllness(2); break;
-				case 4: fillToothByIllness(3); break;
-				case 5: fillToothByIllness(4); break;
-				case 6: fillToothByIllness(5); break;
-				case 7: fillToothByIllness(6); break;
-				case 8: fillToothByIllness(7); break;
-				case 9: fillToothByIllness(8); break;
-				case 10: fillToothByIllness(9); break;
-				case 11: fillToothByIllness(10); break;
-				
+				ArrayList <Integer> illCodeList = new ArrayList <Integer>();
+				ArrayList <Integer> illCodeList_ = getDiagnoseArrayByIllness();
+				if (checkedId == 0){
+					clearToothColor();
 				}
+				else {
+					
+					illCodeList.add(checkedId);
+					fillToothByIllness(illCodeList);
+				}
+				
                
 			}} );
 		
@@ -370,7 +379,7 @@ public class Tooth2DFragment extends Fragment{
         String diagnose = "";
         
         if(teeth.get(0).diagnose == 0)
-        	diagnose = "Œ“ «Ω°øµﬂ’";
+        	diagnose = "ÊàëÊòØÂÅ•Â∫∑Âìí";
         else{
         	for(int i = 0; i < teeth.size(); i++){
         	diagnose += mgr.queryDiseaseById(teeth.get(i).diagnose).name;
