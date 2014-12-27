@@ -1,6 +1,7 @@
 package com.edu.thss.smartdental;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.awt.Color;
 
@@ -11,6 +12,7 @@ import com.edu.thss.smartdental.model.tooth.ToothChartView;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -156,7 +158,7 @@ public class Tooth2DFragment extends Fragment{
 		toothInfo = new ArrayList <SDToothInfo>();
 		mgr.openDatabase();
 		for (int i = 1; i <= 32; i++) {
-			SDToothInfo tooth = mgr.queryToothByPosition(i);
+			SDToothInfo tooth = mgr.queryToothByPosition(i).get(0);
 			toothInfo.add(tooth);
 		}
 		mgr.closeDB();
@@ -296,7 +298,7 @@ public class Tooth2DFragment extends Fragment{
 					case MotionEvent.ACTION_UP:
 						if (code >= 0){
 							fill(code, currentSelectColor, toothView);
-							showCustomDialog(code);
+							showCustomDialog(code, "hello");
 						}
 						break;
 				}
@@ -331,8 +333,9 @@ public class Tooth2DFragment extends Fragment{
 		return rootView;
 	}
 	
-	protected void showCustomDialog(int code) {
-    	final Dialog dialog = new Dialog(super.getActivity());  
+	protected void showCustomDialog(int code, String caseId) {
+    	final Dialog dialog = new Dialog(super.getActivity());
+    	final String currentCaseId = caseId;
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);  
         dialog.setContentView(R.layout.dialoglayout);  
         Button button1 = (Button)dialog.findViewById(R.id.dialog_tooth_myinfo);
@@ -342,29 +345,42 @@ public class Tooth2DFragment extends Fragment{
         TextView number = (TextView)dialog.findViewById(R.id.dialog_tooth_code);
         number.setText(Integer.toString(code));
         
-        TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
-		tableLayout.setVisibility(View.GONE);
-		
-		
+        /*add text*/
+        DBManager mgr = new DBManager(super.getActivity());
+        mgr.openDatabase();
+        List<SDToothInfo> teeth = mgr.queryToothByPosition(code);
+        String name = teeth.get(0).name;
+        String state = teeth.get(0).state;
+        String diagnose = "";
+        
+        if(teeth.get(0).diagnose == 0)
+        	diagnose = "我是健康哒";
+        else{
+        	for(int i = 0; i < teeth.size(); i++){
+        	diagnose += mgr.queryDiseaseById(teeth.get(i).diagnose).name;
+        	if(i!=(teeth.size()-1))
+        		diagnose += " ";  	
+        	}
+        }
+        
+        ((TextView) dialog.findViewById(R.id.dialog_tooth_anterior)).setText(name);
+        ((TextView) dialog.findViewById(R.id.dialog_tooth_permanent)).setText(state);
+        ((TextView) dialog.findViewById(R.id.dialog_tooth_mesialshift)).setText(diagnose);
+
 		DisplayMetrics  dm = new DisplayMetrics();   
-	     //取锟矫达拷锟斤拷锟斤拷锟斤拷   
-	     super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
-	        
-	     //锟斤拷锟节的匡拷锟�   
+	    super.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);   
 	    int screenWidth = dm.widthPixels;   
-	        
-	    //锟斤拷锟节高讹拷   
 	    int screenHeight = dm.heightPixels;          
 		
 		Window dialogWindow = dialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.LEFT | Gravity.TOP);
 		
-		lp.x = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷X锟斤拷锟�
-	    lp.y = (int) (screenWidth*0.05); // 锟斤拷位锟斤拷Y锟斤拷锟�
-	    lp.width = (int) (screenWidth*0.9); // 锟斤拷锟�
-	    lp.height = (int) (screenHeight*0.9); // 锟竭讹拷
-	    lp.alpha = 1.0f; // 透锟斤拷锟斤拷
+		lp.x = (int) (screenWidth*0.05);
+	    lp.y = (int) (screenWidth*0.05);
+	    lp.width = (int) (screenWidth*0.9);
+	    lp.height = (int) (screenHeight*0.8);
+	    lp.alpha = 1.0f;
 
         dialogWindow.setAttributes(lp);
         
@@ -372,26 +388,18 @@ public class Tooth2DFragment extends Fragment{
 		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				 TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table1);
-				 tableLayout.setVisibility(View.VISIBLE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table2);
-				 tableLayout.setVisibility(View.VISIBLE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
-				 tableLayout.setVisibility(View.GONE);
 			}
 		});
         button2.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				 TableLayout tableLayout = (TableLayout)dialog.findViewById(R.id.table3);
-				 tableLayout.setVisibility(View.VISIBLE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table1);
-				 tableLayout.setVisibility(View.GONE);
-				 tableLayout = (TableLayout)dialog.findViewById(R.id.table2);
-				 tableLayout.setVisibility(View.GONE);
+				Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putCharSequence("imageclass", currentCaseId);
+				intent.putExtras(bundle);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent);
 			}
 		}); 
         dialog.show();  

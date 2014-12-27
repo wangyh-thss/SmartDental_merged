@@ -141,11 +141,11 @@ public class DBManager {
 		return teeth;
 	}
 
-	public SDToothInfo queryToothByPosition(int position) {
-		SDToothInfo tooth = new SDToothInfo();
+	public List<SDToothInfo> queryToothByPosition(int position) {
+		ArrayList<SDToothInfo> teeth  = new ArrayList<SDToothInfo>();
 		Cursor c = db.rawQuery("select * from tooth where position = " + position, null);
-		if (c.getCount() > 0) {
-			c.moveToNext();
+		while(c.moveToNext()){
+			SDToothInfo tooth = new SDToothInfo();
 			tooth.position = c.getInt(c.getColumnIndex("position"));
 			tooth.name = c.getString(c.getColumnIndex("name"));
 			tooth.state = c.getString(c.getColumnIndex("state"));
@@ -153,10 +153,14 @@ public class DBManager {
 			tooth.treatment = c.getString(c.getColumnIndex("treatment"));
 			tooth.recordId = c.getInt(c.getColumnIndex("recordId"));
 			tooth.knowledgeId = c.getInt(c.getColumnIndex("knowledgeId"));
+			if (tooth.position == position) {
+				teeth.add(tooth);
+			}
 		}
 		c.close();
-		return tooth;
+		return teeth;
 	}
+
 
 	public SDDisease queryDiseaseById(int id) {
 		SDDisease disease = new SDDisease();
@@ -185,16 +189,18 @@ public class DBManager {
 	public void updateDatabase(String data) throws JSONException {
 		JSONArray jsonArray = new JSONArray(data);
 		
-		db.rawQuery("delete from tooth", null);
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObj = jsonArray.getJSONObject(i);
 			int position = jsonObj.getInt("position");
+
+			db.rawQuery("delete from tooth where position =" + position, null);
 			String name = jsonObj.getString("name");
 			String state = jsonObj.getString("state");
 			int diagnose = jsonObj.getInt("diagnose");
 			String treatment = jsonObj.getString("treatment");
 			int recordId = jsonObj.getInt("recordId");
-			int knowledgeId = jsonObj.getInt("knowledgeId");
+			int knowledgeId = 4;
+			//int knowledgeId = jsonObj.getInt("knowledgeId");
 			db.rawQuery("insert into tooth values(" + position + ",\""+ name + "\","
 				+ ",\""+ state + "\"," + diagnose + ",\""+ treatment + "\","
 				+ recordId + "," + knowledgeId, null);
