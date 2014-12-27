@@ -156,17 +156,17 @@ public class Tooth2DFragment extends Fragment{
 		toothInfo = new ArrayList <SDToothInfo>();
 		mgr.openDatabase();
 		for (int i = 1; i <= 32; i++) {
-			SDToothInfo tooth = mgr.queryToothByPosition(i);
+			List<SDToothInfo> tooth = mgr.queryToothByPosition(i);
 			toothInfo.add(tooth);
 		}
 		mgr.closeDB();
 	}
 	
-	private ArrayList <Integer> getTeethArrayByIllness(int... illCodeList) {
+	private ArrayList <Integer> getTeethArrayByIllness(ArrayList <Integer> illCodeList) {
 		ArrayList <Integer> illTeethList = new ArrayList <Integer>();
 		for (int i = 1; i < toothInfo.size(); i++) {
-			for (int illCode : illCodeList)
-				if (toothInfo.get(i).diagnose == illCode) {
+			for (int illCode = 0; illCode < illCodeList.size(); illCode++)
+				if (toothInfo.get(i).diagnose == illCodeList.get(illCode)) {
 					illTeethList.add(toothInfo.get(i).position);
 					break;
 				}
@@ -174,7 +174,7 @@ public class Tooth2DFragment extends Fragment{
 		return illTeethList;
 	}
 	
-	private void fillToothByIllness(int... illCodeList) {
+	private void fillToothByIllness(ArrayList <Integer> illCodeList) {
 		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
 		int color = android.graphics.Color.rgb(255, 0, 0);
 		
@@ -207,16 +207,6 @@ public class Tooth2DFragment extends Fragment{
 		}
 	}
 	
-	private void setIllnessVisible(RadioButton[] radioButton, int[] illness){
-		int width = getResources().getDisplayMetrics().widthPixels;
-		for(int i=0; i<illness.length; i++){
-			radioButton[illness[i]].setVisibility(View.VISIBLE);
-			if(illness.length<4){
-				radioButton[illness[i]].setWidth(width/illness.length);
-			}
-		}
-	}
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -226,12 +216,11 @@ public class Tooth2DFragment extends Fragment{
 		RadioButton[] radioButton = new RadioButton[11];
 		
 		this.context = rootView.getContext();
-		
+		getToothInfoFromDB();
 		InitImage(toothView);
 		initRadioButton(radioButton);
-		getToothInfoFromDB();
-		int[] illness = new int[]{0,1,2,3,10};
-		setIllnessVisible(radioButton, illness);
+		
+		
 
 		
 		toothView.setOnTouchListener(new OnTouchListener(){
@@ -310,19 +299,49 @@ public class Tooth2DFragment extends Fragment{
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+				ArrayList <Integer> illCodeList = new ArrayList <Integer>();
 				switch(checkedId){
-				case 1: clearToothColor(); break;
-				case 2: fillToothByIllness(1); break;
-				case 3: fillToothByIllness(2); break;
-				case 4: fillToothByIllness(3); break;
-				case 5: fillToothByIllness(4); break;
-				case 6: fillToothByIllness(5); break;
-				case 7: fillToothByIllness(6); break;
-				case 8: fillToothByIllness(7); break;
-				case 9: fillToothByIllness(8); break;
-				case 10: fillToothByIllness(9); break;
-				case 11: fillToothByIllness(10); break;
+				case 1: 
+					clearToothColor(); 
+					break;
+				case 2: 
+					illCodeList.add(1);
+					fillToothByIllness(illCodeList);
+					break;
+				case 3: 
+					illCodeList.add(2);
+					fillToothByIllness(illCodeList);
+					break;
+				case 4: 
+					illCodeList.add(3);
+					fillToothByIllness(illCodeList);
+					break;
+				case 5: 
+					illCodeList.add(4);
+					fillToothByIllness(illCodeList);
+					break;
+				case 6: 
+					illCodeList.add(5);
+					fillToothByIllness(illCodeList);
+					break;
+				case 7: 
+					illCodeList.add(6);
+					fillToothByIllness(illCodeList);
+					break;
+				case 8: 
+					illCodeList.add(7);
+					fillToothByIllness(illCodeList);
+					break;
+				case 9: 
+					illCodeList.add(8);
+					fillToothByIllness(illCodeList);
+					break;
+				case 10: 
+					illCodeList.add(9);
+					fillToothByIllness(illCodeList);
+					break;
+				case 11: 
+					break;
 				
 				}
                
