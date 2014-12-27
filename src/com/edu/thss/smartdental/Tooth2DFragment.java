@@ -32,6 +32,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -150,7 +151,6 @@ public class Tooth2DFragment extends Fragment{
 		pColored.clear();
 	}
 	
-	
 	private void getToothInfoFromDB() {
 		DBManager mgr = new DBManager(this.context);
 		toothInfo = new ArrayList <SDToothInfo>();
@@ -185,18 +185,55 @@ public class Tooth2DFragment extends Fragment{
 		}
 	}
 
+	private void initRadioButton(RadioButton[] radioButton){
+		String[] buttonText = new String[]{
+			"牙齿图",
+			"牙体缺损",
+			"牙列缺损",
+			"牙龈炎",
+			"牙周炎",
+			"牙髓炎",
+			"龋齿",
+			"未知牙病一",
+			"未知牙病二",
+			"未知牙病三",
+			"全部"
+		};
+		for(int i=0; i<11; i++){
+			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null); 
+			radioButton[i].setId(i+1);
+			radioButton[i].setText(buttonText[i]);
+			radioGroup.addView(radioButton[i]);
+		}
+	}
+	
+	private void setIllnessVisible(RadioButton[] radioButton, int[] illness){
+		int width = getResources().getDisplayMetrics().widthPixels;
+		for(int i=0; i<illness.length; i++){
+			radioButton[illness[i]].setVisibility(View.VISIBLE);
+			if(illness.length<4){
+				radioButton[illness[i]].setWidth(width/illness.length);
+			}
+		}
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
-		fm = getFragmentManager();
+		RadioButton[] radioButton = new RadioButton[11];
 		
 		this.context = rootView.getContext();
 		
 		InitImage(toothView);
+		initRadioButton(radioButton);
 		getToothInfoFromDB();
+		int[] illness = new int[]{0,1,2,3,10};
+		setIllnessVisible(radioButton, illness);
+
+		
 		toothView.setOnTouchListener(new OnTouchListener(){
 
 			@Override
@@ -267,42 +304,33 @@ public class Tooth2DFragment extends Fragment{
 			}
 		});
 		
-		radioGroup.check(R.id.tooth_2d_tab_illness1);
+		radioGroup.check(1);
+		
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 
 				switch(checkedId){
-				case R.id.tooth_2d_tab_illness1: clearToothColor(); break;
-				case R.id.tooth_2d_tab_illness2: fillToothByIllness(1); break;
-				case R.id.tooth_2d_tab_illness3: fillToothByIllness(2); break;
-				case R.id.tooth_2d_tab_illness4: 
-					fillToothByIllness(1, 2);
-					break;
+				case 1: clearToothColor(); break;
+				case 2: fillToothByIllness(1); break;
+				case 3: fillToothByIllness(2); break;
+				case 4: fillToothByIllness(3); break;
+				case 5: fillToothByIllness(4); break;
+				case 6: fillToothByIllness(5); break;
+				case 7: fillToothByIllness(6); break;
+				case 8: fillToothByIllness(7); break;
+				case 9: fillToothByIllness(8); break;
+				case 10: fillToothByIllness(9); break;
+				case 11: fillToothByIllness(10); break;
+				
 				}
                
 			}} );
 		
 		return rootView;
 	}
-	/*
-	private void changeFragment(int index){
-		FragmentTransaction transaction = fm.beginTransaction();
-		Fragment tempfragment = null;
-		switch(index){
-		case 0: tempfragment = new Tooth2DIllness1Fragment();break;
-		case 1: tempfragment = new Tooth2DIllness2Fragment();break;
-		case 2: tempfragment = new Tooth2DIllness3Fragment();break;
-		case 3: tempfragment = new Tooth2DIllness4Fragment();break;
-		default: break;
-		}
-		if(tempfragment != null){
-        	transaction.replace(R.id.tooth_tabcontent1, tempfragment);
-        	transaction.commit();
-        }
-	}
-	*/
+	
 	protected void showCustomDialog(int code) {
     	final Dialog dialog = new Dialog(super.getActivity());  
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);  
