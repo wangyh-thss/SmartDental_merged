@@ -15,11 +15,13 @@ import com.edu.thss.smartdental.model.general.GetUrlByTag;
 import com.edu.thss.smartdental.model.general.HttpGetProcess;
 import com.edu.thss.smartdental.model.general.HttpPostProcess;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -37,10 +39,10 @@ import android.widget.Toast;
 
 public class ImgListAdapter extends BaseAdapter implements Filterable{
 	private class buttonViewHolder{
-		Button read; //ÔÄ¶Á
-		Button delete; //É¾³ý
-		Button hide; //Òþ²Ø
-		Button mark;//±ê¼Ç
+		Button read; //ï¿½Ä¶ï¿½
+		Button delete; //É¾ï¿½ï¿½
+		Button hide; //ï¿½ï¿½ï¿½ï¿½
+		Button mark;//ï¿½ï¿½ï¿½
 	}
 	private ArrayList<ImageElement> list;
 	private Context context;
@@ -95,9 +97,9 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		holder.hide = (Button)convertView.findViewById(R.id.image_list_item_hide);
 		holder.mark = (Button)convertView.findViewById(R.id.image_list_item_hint);
 		
-		holder.hide.setText(image.isHidden?"²»Òþ²Ø":"Òþ²Ø");
-		holder.mark.setText(image.isMarked?"²»±ê¼Ç":"±ê¼Ç");
-		holder.read.setText(image.isRead?"ÒÑ¶Á":"Î´¶Á");
+		holder.hide.setText(image.isHidden?"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½":"ï¿½ï¿½ï¿½ï¿½");
+		holder.mark.setText(image.isMarked?"ï¿½ï¿½ï¿½ï¿½ï¿½":"ï¿½ï¿½ï¿½");
+		holder.read.setText(image.isRead?"ï¿½Ñ¶ï¿½":"Î´ï¿½ï¿½");
 		
 		holder.read.setOnClickListener(new ButtonListner(position));
 		holder.delete.setOnClickListener(new ButtonListner(position));
@@ -123,7 +125,7 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		protected FilterResults performFiltering(CharSequence constraint) {
 			
 			FilterResults results = new FilterResults();
-			if(constraint == null || constraint.length()==0){ //Ã»ÓÐ¹ýÂËÌõ¼þ
+			if(constraint == null || constraint.length()==0){ //Ã»ï¿½Ð¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				results.values = this.original;
 				results.count = this.original.size();
 				
@@ -156,9 +158,9 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
     
     protected void ConfirmDeleteDialog(final String caseid) {
 		AlertDialog.Builder builder = new Builder(context);
-		builder.setMessage("È·ÈÏÉ¾³ý£¿");
-		builder.setTitle("ÌáÊ¾£º");
-		builder.setPositiveButton("ÊÇ", new DialogInterface.OnClickListener() {
+		builder.setMessage("È·ï¿½ï¿½É¾ï¿½ï¿½");
+		builder.setTitle("ï¿½ï¿½Ê¾ï¿½ï¿½");
+		builder.setPositiveButton("ï¿½ï¿½", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -167,7 +169,7 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 				dialog.dismiss();
 			}
 		});
-		builder.setNegativeButton("·ñ", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("ï¿½ï¿½", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -184,11 +186,13 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		public void CallBack(String src) {
 			// TODO Auto-generated method stub
 			if (src.equals("success")){
-				new HttpGetProcess(handler, JSON, new GetUrlByTag().GetUrl(tagnum), new UpdateImageInfo()).start();
-				Toast.makeText(context, "²Ù×÷³É¹¦", Toast.LENGTH_SHORT).show();
+				SharedPreferences preferences = context.getApplicationContext().getSharedPreferences("setting", Activity.MODE_PRIVATE);
+				String username = preferences.getString("username", "");
+				new HttpGetProcess(handler, JSON, new GetUrlByTag(username).GetUrl(tagnum), new UpdateImageInfo()).start();
+				Toast.makeText(context, "ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½", Toast.LENGTH_SHORT).show();
 			}
 			else {
-				Toast.makeText(context, "²Ù×÷Ê§°Ü", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 			}
 		}
     	
@@ -205,10 +209,10 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		public void onClick(View v) {
 			int vid = v.getId();
 			if(vid == holder.delete.getId()){
-			 //É¾³ý
+			 //É¾ï¿½ï¿½
 				//list.remove(itemPosition);
 				new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), list.get(itemPosition).caseID, "delete", "1").start();
-				//ÐèÒªÏò·þÎñÆ÷·¢postÇëÇóÐÞ¸Ä
+				//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 				//notifyDataSetChanged();
 				//ConfirmDeleteDialog(list.get(itemPosition).caseID);
 			}
@@ -222,7 +226,7 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "hide", "0").start();
 		    		//temp.isHidden = false;
 		    	}
-		    	//ÐèÒªÏò·þÎñÆ÷·¢postÇëÇóÐÞ¸Ä
+		    	//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 		    	//list.set(this.itemPosition, temp);
 		    	//notifyDataSetChanged();
 		    }
@@ -237,7 +241,7 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "record", "0").start();
 		    		//temp.isMarked = false;
 		    	}
-		    	//ÐèÒªÏò·þÎñÆ÷·¢postÇëÇóÐÞ¸Ä
+		    	//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 		    	//list.set(this.itemPosition, temp);
 		    	//notifyDataSetChanged();
 		    }
@@ -247,7 +251,7 @@ public class ImgListAdapter extends BaseAdapter implements Filterable{
 		    		new HttpPostProcess(handler, post_result, "http://166.111.80.119/userinfo", new HandleAfterPost(), temp.caseID, "read", "1").start();
 		    		//temp.isRead = true;
 		    	}
-		    	//ÐèÒªÏò·þÎñÆ÷·¢postÇëÇóÐÞ¸Ä
+		    	//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 		    	//list.set(this.itemPosition, temp);
 		    	
 		    	//notifyDataSetChanged();
