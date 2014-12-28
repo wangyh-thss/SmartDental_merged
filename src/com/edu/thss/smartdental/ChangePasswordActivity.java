@@ -35,22 +35,22 @@ public class ChangePasswordActivity extends Activity {
 		public void onClick(View v) {
 			String old_password = old_password_edit.getText().toString(), new_password = new_password_edit.getText().toString(), repeat_new_password = repeat_new_password_edit.getText().toString();
 			if (!new_password.equals(repeat_new_password)) {
-				Toast.makeText(ChangePasswordActivity.this, "两次新密码输入不一致", Toast.LENGTH_LONG).show();
+				Toast.makeText(ChangePasswordActivity.this, getString(R.string.new_password_not_same), Toast.LENGTH_LONG).show();
 				return;
 			}
 			String t = db.setuserPassword(old_password, new_password, preferences.getString("username", ""));
 			if (t.equals("true")) {
-				Toast.makeText(ChangePasswordActivity.this, "密码修改成功", Toast.LENGTH_LONG).show();
+				Toast.makeText(ChangePasswordActivity.this, getString(R.string.change_password_success), Toast.LENGTH_LONG).show();
 				finish();
 			}
 			else
 				if (t.equals("wrong password"))
-					Toast.makeText(ChangePasswordActivity.this, "旧密码错误", Toast.LENGTH_LONG).show();
+					Toast.makeText(ChangePasswordActivity.this, getString(R.string.old_password_wrong), Toast.LENGTH_LONG).show();
 				else
 					if (t.equals("fail to connect to Database"))
-						Toast.makeText(ChangePasswordActivity.this, "连不上服务器", Toast.LENGTH_LONG).show();
+						Toast.makeText(ChangePasswordActivity.this, getString(R.string.message_link_fail), Toast.LENGTH_LONG).show();
 					else
-						Toast.makeText(ChangePasswordActivity.this, "未知错误", Toast.LENGTH_LONG).show();
+						Toast.makeText(ChangePasswordActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
 		}
 	};
 	

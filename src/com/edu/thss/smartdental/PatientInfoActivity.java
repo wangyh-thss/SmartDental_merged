@@ -11,7 +11,7 @@ public class PatientInfoActivity extends Activity {
 		setContentView(R.layout.activity_patient_info);
 		Intent intent = getIntent();
 		
-		int patient_id = intent.getIntExtra("patient_id", -1);
+		String patient_username = intent.getStringExtra("patient_username");
 		
 	}
 }

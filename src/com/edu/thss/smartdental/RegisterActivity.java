@@ -50,28 +50,28 @@ public class RegisterActivity extends Activity {
             	pd.dismiss();
             	break;
             case 1:
-            	Toast.makeText(RegisterActivity.this, "用户名不能为空", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.message_null_username), Toast.LENGTH_LONG).show();
             	break;
             case 2:
-            	Toast.makeText(RegisterActivity.this, "密码不能为空", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.message_null_password), Toast.LENGTH_LONG).show();
             	break;
             case 3:
-            	Toast.makeText(RegisterActivity.this, "两次密码输入不一致", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.message_password_not_same), Toast.LENGTH_LONG).show();
             	break;
             case 4:
-            	Toast.makeText(RegisterActivity.this, "用户名已存在", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.username_exists), Toast.LENGTH_LONG).show();
             	break;
             case 5:
-            	Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.register_success), Toast.LENGTH_LONG).show();
             	break;
             case 6:
-            	Toast.makeText(RegisterActivity.this, "用户名已存在", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.username_exists), Toast.LENGTH_LONG).show();
             	break;
             case 7:
-            	Toast.makeText(RegisterActivity.this, "连不上服务器", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.message_link_fail), Toast.LENGTH_LONG).show();
             	break;
             case 8:
-            	Toast.makeText(RegisterActivity.this, "未知错误", Toast.LENGTH_LONG).show();
+            	Toast.makeText(RegisterActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
             	break;
             default:
             	break;	
@@ -150,7 +150,7 @@ public class RegisterActivity extends Activity {
 	
 	private OnClickListener registerListener = new OnClickListener() {
 		public void onClick(View v) {
-			pd = ProgressDialog.show(RegisterActivity.this, "", "注册中");
+			pd = ProgressDialog.show(RegisterActivity.this, "", getString(R.string.register_ing));
 	        new Thread(new registerThread()).start();
 		}
 	};
