@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/fragment_emr_row_background"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="right"
+    android:orientation="vertical" >
+
+ <TextView
+     android:id="@+id/bbs_detail_item_title"
+     android:gravity="center"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_margin="5dp"
+     android:layout_alignParentTop="true"
+     android:textColor="@color/app_black"
+     android:background="@drawable/tvbar"  
+     android:textSize="20sp"
+     android:text="Title" />
+
+ <TextView
+     android:id="@+id/bbs_detail_item_content"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/bbs_detail_item_title"
+     android:layout_marginTop="10dp"
+     android:layout_centerHorizontal="true"
+     android:layout_centerVertical="true"
+     android:layout_marginLeft="15dp"
+     android:text="content"
+     android:textColor="@color/app_black"
+     android:textSize="16sp" />
+ 
+ <TextView
+     android:id="@+id/bbs_detail_item_time"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginRight="10dp"
+	 android:layout_below="@+id/bbs_detail_item_content"
+     android:layout_marginTop="20dp"
+	 android:layout_alignParentRight="true"
+     android:text="time"
+     android:textColor="@color/app_grey"
+     android:textSize="14sp" />
+ 
+ <TextView
+     android:id="@+id/bbs_detail_item_author"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+	 android:layout_alignParentLeft="true"
+     android:layout_marginLeft="10dp"
+     android:layout_marginTop="20dp"
+	 android:layout_below="@+id/bbs_detail_item_content"
+     android:text="author"
+     android:textColor="@color/app_grey"
+     android:textSize="16sp" />
+
+ <Button
+     android:id="@+id/bbs_detail_item_delete"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/bbs_detail_item_content"
+     android:layout_marginTop="20dp"
+     android:layout_toLeftOf="@+id/bbs_detail_item_reply"
+     android:background="@color/app_white"
+     android:minHeight="0dip"
+     android:minWidth="0dip"
+     android:paddingRight="10dp"
+     android:text="删除"
+     android:textColor="@color/app_blue"
+     android:textSize="13sp" />
+
+ <Button
+     android:id="@+id/bbs_detail_item_collect"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/bbs_detail_item_content"
+     android:layout_marginTop="20dp"
+     android:layout_toLeftOf="@+id/bbs_detail_item_reply"
+     android:background="@color/app_white"
+     android:minHeight="0dip"
+     android:minWidth="0dip"
+     android:paddingRight="10dp"
+     android:text="收藏"
+     android:textColor="@color/app_blue"
+     android:textSize="13sp" />
+
+ <Button
+     android:id="@+id/bbs_detail_item_reply"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/bbs_detail_item_content"
+     android:layout_marginTop="20dp"
+     android:layout_toLeftOf="@+id/bbs_detail_item_time"
+     android:background="@color/app_white"
+     android:minHeight="0dip"
+     android:minWidth="0dip"
+     android:paddingRight="10dp"
+     android:textColor="@color/app_blue"
+     android:textSize="13sp"
+     android:text="回复" />
+
+</RelativeLayout>

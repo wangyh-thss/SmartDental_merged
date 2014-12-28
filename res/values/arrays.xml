@@ -10,6 +10,7 @@
    	    <item>课程</item>
    	    <item>数据分析</item>
    	    <item>设置</item>
+   	    <item>圈子</item>
    	</string-array>
    	<string-array name="nav_drawer_icons">
    	    <item>@drawable/ic_drawer_info</item>
@@ -20,11 +21,26 @@
    	    <item>@drawable/ic_drawer_remind</item>
    	    <item>@drawable/ic_drawer_data</item>
    	    <item>@drawable/ic_drawer_setting</item>
+   	    <item>@drawable/ic_drawer_circle</item>
    	</string-array>
    	<string-array name="spinnername">
    	    <item>全部</item>
    	    <item>门诊</item>
    	    <item>住院</item>
    	    <item>其他</item>
+   	</string-array>
+   	<string-array name="tab_names">
+   	    <item>灌水</item>
+   	    <item>求助</item>
+   	    <item>知识</item>
+   	    <item>公告</item>
+   	</string-array>
+   	<string-array name="view_tag_names">
+   		<item >灌水</item>
+   		<item >知识</item>
+   		<item >求助</item>
+   		<item >公告</item>
+   		<item >收藏</item>
+   		<item >全部</item>
    	</string-array>
 </resources>

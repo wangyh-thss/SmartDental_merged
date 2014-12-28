@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_white" >
+
+    <RadioGroup
+        android:id="@+id/bbs_in_tab"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <RadioButton
+            android:id="@+id/bbs_in_tab_view"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="看帖" />
+        
+        
+        <RadioButton
+            android:id="@+id/bbs_in_tab_group"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="圈子" />
+        <RadioButton
+            android:id="@+id/bbs_in_tab_news"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="消息" />
+        <RadioButton
+            android:id="@+id/bbs_in_tab_post"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom"
+            android:text="发帖" />
+        <RadioButton
+            android:id="@+id/bbs_in_tab_manage"
+            style="@style/emr_tab"
+            android:drawableBottom="@drawable/emr_tab_bottom" 
+            android:text="管理" />
+        
+    </RadioGroup>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+        <Button
+            android:visibility="invisible"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:visibility="invisible"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/remind_button"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="#00000000"/>
+        <Button
+            android:visibility="invisible"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/manage_invisible_button"
+            android:visibility="invisible"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/bbs_in_tab_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bbs_in_tab"
+        />
+
+</RelativeLayout>

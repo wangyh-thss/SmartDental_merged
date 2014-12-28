@@ -255,17 +255,13 @@ public class Tooth2DFragment extends Fragment{
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
+		this.context = rootView.getContext();
 		
 		getToothInfoFromDB();
-		
-		this.context = rootView.getContext();
 		InitImage(toothView);
 		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
 		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
 		initRadioButton(radioButton, illCodeList);
-		
-		
-
 		
 		toothView.setOnTouchListener(new OnTouchListener(){
 

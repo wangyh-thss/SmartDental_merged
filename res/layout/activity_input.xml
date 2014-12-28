@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:id="@+id/input_window_layout" 
+android:layout_width="match_parent"
+android:layout_height="match_parent"  
+android:gravity="center_horizontal" 
+android:orientation="vertical" 
+android:background="@android:color/transparent"
+ > 
+ 
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+
+</LinearLayout>
+
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:id="@+id/input_layout" 
+android:layout_width="match_parent"
+android:layout_height="wrap_content"  
+android:orientation="horizontal" 
+android:background="@color/light_grey"
+android:layout_alignParentBottom="true"
+android:paddingLeft="5dp"
+ > 
+ 
+ <EditText
+        android:id="@+id/edit_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:minLines="1"
+        android:maxLines="6"
+        android:ems="10"
+        android:background="@android:drawable/editbox_dropdown_light_frame"
+        android:hint="请输入回复"
+        android:inputType="textMultiLine" 
+        android:layout_weight="4"
+		android:textColor="#555"
+		android:layout_marginBottom="5dp"
+        >
+        <requestFocus/>
+        </EditText>
+<Button 
+android:id="@+id/post_reply" 
+android:layout_width="110dp" 
+android:layout_height="match_parent" 
+android:text="发送" 
+android:textSize="16sp" 
+android:textColor="@color/app_blue"
+android:gravity="center"
+android:background="@color/light_grey"
+android:layout_weight="1"
+
+
+/> 
+  
+
+
+</LinearLayout>
+</RelativeLayout> 

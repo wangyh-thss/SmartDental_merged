@@ -57,6 +57,10 @@ import com.edu.thss.smartdental.ui.drawer.NavDrawerListAdapter;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.TypedArray;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -95,8 +99,17 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 		findView();
 		
 		if(savedInstanceState == null){
-			selectItem(0);
+			selectItem(8);
 		}
+	}
+
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			finish();
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}
+
 		
 //		handler = new Handler(){
 //		    @Override
@@ -138,6 +151,23 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 //		};
 //		new Thread(runnable).start();
 	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		SharedPreferences preferences = getSharedPreferences("setting", MODE_PRIVATE);
+		boolean justDeleted = preferences.getBoolean("justDeleted", true);
+		if(justDeleted){
+			setContentView(R.layout.activity_main);
+			findView();
+			selectItem(8);
+			Editor editor = preferences.edit();
+			editor.putBoolean("justDeleted", false);
+			editor.commit();
+			
+		}
+		super.onResume();
+	}
 	
 	@SuppressLint("NewApi")
 	private void findView(){
@@ -158,6 +188,7 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[5],mNavMenuIconsTypeArray.getResourceId(5, -1)));
 		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[6],mNavMenuIconsTypeArray.getResourceId(6, -1)));
 		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[7],mNavMenuIconsTypeArray.getResourceId(7, -1)));
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[8],mNavMenuIconsTypeArray.getResourceId(8, -1)));
 	
 		mNavMenuIconsTypeArray.recycle();
 		
@@ -231,6 +262,9 @@ public class MainActivity extends FragmentActivity implements OnItemClickListene
 			break;
 		case 7: 
 			fragment = new SettingFragment();
+			break;
+		case 8:
+			fragment = new BBSInFragment(12);
 			break;
 		default: break;
 		}

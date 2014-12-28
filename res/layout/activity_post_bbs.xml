@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+		<Spinner 
+	        android:id="@+id/edit_tab_spinner"
+	        android:layout_alignParentTop="true"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        />
+	    <EditText
+	        android:id="@+id/edit_bbs_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentTop="true"
+	        android:hint="请输入帖子标题"
+	        android:drawablePadding="5dp"
+	        android:singleLine="true"
+	        android:ems="10">
+	        <requestFocus/>
+	    </EditText>
+    </LinearLayout>
+    
+    
+    <EditText
+        android:id="@+id/edit_bbs_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="6"
+        android:maxLines="6"
+        android:gravity="left|top"
+        android:ems="10"
+        android:background="@drawable/edit_text_bg"
+        android:hint="请输入帖子内容"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
+</LinearLayout>

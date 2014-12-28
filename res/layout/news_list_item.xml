@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author: FU CHIN SENG -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView 
+	    android:id="@+id/news_list_item_replyer"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="10dp"
+	    android:paddingTop="10dp"
+	    android:singleLine="true"
+	    android:textSize="18sp"
+	    android:textColor="@color/app_black"
+	    android:text="replyer"/>
+    <TextView 
+	    android:id="@+id/news_list_item_preview"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textSize="14sp"
+	    android:textColor="@color/app_grey"
+	    android:ellipsize="end"
+	    android:singleLine="true"
+	    android:layout_alignLeft="@+id/news_list_item_replyer"
+	    android:layout_below="@+id/news_list_item_replyer"
+	    android:paddingTop="5dp"
+	    android:paddingBottom="8dp"
+	    android:text="preview" />
+
+</RelativeLayout>

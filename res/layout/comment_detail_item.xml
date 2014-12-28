@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/fragment_emr_row_background"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="right"
+    android:orientation="vertical" >
+
+ <RelativeLayout
+     	android:id = "@+id/comment_item_white"
+    	android:layout_width="match_parent"
+    	android:layout_height="20dp"
+    	android:background="@color/light_grey"
+    	android:orientation="horizontal" 
+    	android:descendantFocusability="blocksDescendants">
+ </RelativeLayout>
+
+ <TextView
+     android:id="@+id/comment_item_content"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_centerHorizontal="true"
+     android:layout_margin="10dp"
+     android:layout_marginTop="20dp"
+   	 android:layout_below="@+id/comment_item_white"
+     android:text="content"
+     android:textColor="@color/app_black"
+     android:textSize="16sp" />
+    
+ <TextView 
+	    android:id="@+id/comment_item_author"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textSize="16sp"
+	    android:textColor="@color/app_grey"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/comment_item_content"
+	    android:layout_marginTop="10dp"
+	    android:layout_marginLeft = "20dp"
+	    android:text="author"
+	    />
+	<TextView 
+	    android:id="@+id/comment_item_time"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textSize="13sp"
+	    android:textColor="@color/app_grey"
+	    android:layout_alignParentRight="true"
+	    android:layout_marginRight = "20dp"
+	    android:layout_below="@+id/comment_item_content"
+	    android:layout_marginTop="14dp"
+	    android:text="time"
+	    />
+ 
+  <Button
+     android:id="@+id/comment_item_reply"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:background="@color/app_white"
+     android:text="回复"
+	 android:layout_toLeftOf="@+id/comment_item_time"
+	 android:layout_marginRight="10dp"
+     android:minHeight="0dip"
+     android:minWidth="0dip"
+	 android:layout_below="@+id/comment_item_content"
+	    android:layout_marginTop="14dp"
+     android:textColor="@color/app_blue"
+     android:textSize="13sp" />
+  
+ <Button
+     android:id="@+id/comment_item_delete"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:background="@color/app_white"
+     android:text="删除"
+	 android:layout_toLeftOf="@+id/comment_item_reply"
+	 android:layout_below="@+id/comment_item_content"
+	    android:layout_marginTop="14dp"
+     android:textColor="@color/app_blue"
+	 android:layout_marginRight="10dp"
+     android:minHeight="0dip"
+     android:minWidth="0dip"
+     android:textSize="13sp" />
+ 
+</RelativeLayout>

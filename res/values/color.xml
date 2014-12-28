@@ -30,6 +30,8 @@
     <color name="app_blue">#00bfff</color>
     
     <color name="app_black">#000000</color>
+    <color name="light_grey">#F5F5F5</color>
+    <color name="preview_grey">#BBBBBB</color>
     
 </resources>
 <!-- #303030 #cccccc-->

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_grey" >
+    
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:id="@+id/bbs_view_bar">
+		
+		<Spinner 
+	        android:id="@+id/bbs_view_spinner"
+	        android:layout_alignParentTop="true"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        />
+	    <!-- 搜索框 -->
+    <EditText
+        android:id="@+id/bbs_searchbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="输入要搜索的帖子"
+        android:drawablePadding="5dp"
+        android:singleLine="true"
+        android:ems="10">
+        
+    </EditText>
+    </LinearLayout>
+    
+    
+      
+    
+    <!-- 病历列表 -->
+    <!-- 最好改成多种情况，比如未读、隐藏、标记…… -->
+    <!-- android:layout_below="@+id/bbs_searchbox" -->
+    <ListView 
+        android:id="@+id/bbs_list"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:divider="@color/app_grey"
+        android:dividerHeight="1dp"
+        android:layout_below="@+id/bbs_view_bar"
+        >
+    </ListView>
+
+</RelativeLayout>
