@@ -99,23 +99,23 @@ public class AdminActivity extends FragmentActivity {
 								error++;
 							sum++;
 						} catch (Exception e) {
-							nBuilder.setContentText("文件格式有误");
+							nBuilder.setContentText(getString(R.string.file_format_error));
 							notification = nBuilder.build();
 							nManager.notify(0, notification);
 							break;
 						}
 					} catch (IOException e) {
-						nBuilder.setContentText("打开文件失败");
+						nBuilder.setContentText(getString(R.string.file_open_failed));
 						notification = nBuilder.build();
 						nManager.notify(0, notification);
 						break;
 					}
 				}
-				nBuilder.setContentText("导入了" + String.valueOf(sum) + "条记录，" + String.valueOf(error) + "个错误");
+				nBuilder.setContentText(getString(R.string.imported) + String.valueOf(sum) + getString(R.string.number_record) + String.valueOf(error) + getString(R.string.number_error));
 				notification = nBuilder.build();
 				nManager.notify(1, notification);
 			} catch (FileNotFoundException e) {
-				nBuilder.setContentText("文件不存在");
+				nBuilder.setContentText(getString(R.string.file_not_exists));
 				notification = nBuilder.build();
 				nManager.notify(1, notification);
 			}

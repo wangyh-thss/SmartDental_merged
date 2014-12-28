@@ -74,6 +74,12 @@
     <string name="change_password_success">密码修改成功</string>
     <string name="file_export_hint">从xls表格文件导入\n格式为每行一条记录：用户名,密码\n注意：分隔符必须使用英文逗号。</string>
     <string name="file_export">从文件导入</string>
+    <string name="file_not_exists">文件不存在</string>
+    <string name="file_open_failed">打开文件失败</string>
+    <string name="file_format_error">文件格式有误</string>
+    <string name="imported">导入了</string>
+    <string name="number_record">个记录</string>
+    <string name="number_error">个错误，</string>
     <string name="set_circle_password">设置圈子密码</string>
     <string name="manage_all_patients">管理圈子的所有病人</string>
     <string name="all_patient_hint">圈子内的所有病人，长按踢出圈子。</string>
