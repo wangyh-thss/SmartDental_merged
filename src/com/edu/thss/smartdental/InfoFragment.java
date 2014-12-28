@@ -40,9 +40,9 @@ import android.widget.Toast;
 
 public class InfoFragment extends Fragment{
 	
-	private String[] ops = new String[]{"Ñ¡Ôñ±¾µØÍ¼Æ¬","ÅÄÕÕ"};
-	private static final String IMAGE_FILE_NAME = "faceimage"; /*Í·ÏñÃû³Æ*/
-	/*ÇëÇóÂë*/
+	private String[] ops = new String[]{"Ñ¡ï¿½ñ±¾µï¿½Í¼Æ¬","ï¿½ï¿½ï¿½ï¿½"};
+	private static final String IMAGE_FILE_NAME = "faceimage"; /*Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+	/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	private static final int IMAGE_REQUEST_CODE = 0;
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESULT_REQUEST_CODE = 2;
@@ -72,7 +72,7 @@ public class InfoFragment extends Fragment{
 	Context context;
 	ImageView faceImage;
 	
-	/*Êý¾Ý¿âÏà¹Ø*/
+	/*ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½*/
 	private DBManager mgr;
 	
 	private View.OnClickListener listener = new View.OnClickListener(){
@@ -176,8 +176,9 @@ public class InfoFragment extends Fragment{
 //			e.printStackTrace();
 //		}
 	    
-		SDPatient patient= mgr.queryByName("ÍõÒ»");
+		SDPatient patient= mgr.queryByName("ï¿½ï¿½Ò»");
 		Button upload = (Button)rootView.findViewById(R.id.infoupload);
+		Button change_password = (Button)rootView.findViewById(R.id.change_password);
 		faceImage = (ImageView)rootView.findViewById(R.id.infoImageItem);
 		
 		//------textview---------
@@ -201,24 +202,33 @@ public class InfoFragment extends Fragment{
 		editbasic.setOnClickListener(editlistener);
 		//this.context = rootView.getContext();
 		upload.setOnClickListener(listener);
-		
+		change_password.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ChangePasswordActivity.class);
+				startActivity(intent);
+			}
+		});
 		
 		
 		return rootView;
 	}
 	
 	/**
-	 * ÏÔÊ¾¶Ô»°¿ò
+	 * ï¿½ï¿½Ê¾ï¿½Ô»ï¿½ï¿½ï¿½
 	 * */
 	private void showDialog(){
-		new AlertDialog.Builder(context).setTitle("ÉèÖÃÍ·Ïñ").setItems(ops, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(context).setTitle("ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½").setItems(ops, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch(which){
 				case 0:
 					Intent intentFromLocal = new Intent();
-					//ÉèÖÃÎÄ¼þÀàÐÍ
+					//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
 					intentFromLocal.setType("image/*");
 					intentFromLocal.setAction(Intent.ACTION_GET_CONTENT);
 					startActivityForResult(intentFromLocal,IMAGE_REQUEST_CODE);
@@ -234,7 +244,7 @@ public class InfoFragment extends Fragment{
 					break;
 				}	
 			}
-		}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("È¡ï¿½ï¿½", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -269,7 +279,7 @@ public class InfoFragment extends Fragment{
 					File tempFile = new File(path,IMAGE_FILE_NAME);
 						startPhotoZoom(Uri.fromFile(tempFile));
 				}else{
-					Toast.makeText(getActivity(), "Î´ÕÒµ½´æ´¢¿¨£¬ÎÞ·¨´æ´¢ÕÕÆ¬£¡", Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), "Î´ï¿½Òµï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½æ´¢ï¿½ï¿½Æ¬ï¿½ï¿½", Toast.LENGTH_LONG).show();
 				}
 				break;
 			case RESULT_REQUEST_CODE:
@@ -283,12 +293,12 @@ public class InfoFragment extends Fragment{
 	}
 	
 	/**
-	 * ²Ã¼ôÍ¼Æ¬
+	 * ï¿½Ã¼ï¿½Í¼Æ¬
 	 * */
    public void startPhotoZoom(Uri uri){
 	   Intent intent = new Intent("com.android.camera.action.CROP");
 	   intent.setDataAndType(uri, "image/*");
-	   //ÉèÖÃ²Ã¼ô
+	   //ï¿½ï¿½ï¿½Ã²Ã¼ï¿½
 	   intent.putExtra("crop", "true");
 	   intent.putExtra("aspectX", 1);
 	   intent.putExtra("aspectY", 1);
@@ -298,7 +308,7 @@ public class InfoFragment extends Fragment{
 	   startActivityForResult(intent,RESULT_REQUEST_CODE);
    }
    /**
-    * ±£´æ²Ã¼ôÖ®ºóµÄÍ¼Æ¬Êý¾Ý
+    * ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½Ö®ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½
     * */
    private void getImageToView(Intent data){
 	   Bundle extras = data.getExtras();
