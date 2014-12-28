@@ -104,6 +104,15 @@ public class BBSDetailActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	public boolean userIsTheDoctor(){
+		String docName=preferences.getString("current_circle", "");
+		if(docName.equals(localUser))
+			return true;
+		else {
+			return false;
+		}
+	}
+	
 	public boolean isLocalUser(){
 		if(author.equals(localUser))
 			return true;
