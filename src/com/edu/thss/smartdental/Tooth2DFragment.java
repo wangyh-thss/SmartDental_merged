@@ -67,39 +67,6 @@ public class Tooth2DFragment extends Fragment{
 	public Tooth2DFragment(String userName){
 		getURL = "http://166.111.80.119/userinfo/tooth?user=" + userName;
 		Log.i("Tooth2DUserName", userName);
-		handler = new Handler(){
-		    @Override
-		    public void handleMessage(Message msg) {
-		        super.handleMessage(msg);
-		        Bundle data = msg.getData();
-		        String val = data.getString("result");
-		    }
-		};
-		
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				HttpClient client = new DefaultHttpClient();  
-		        HttpGet get = new HttpGet(getURL);
-		        
-		        try {
-					HttpResponse responseGet = client.execute(get);  
-			        HttpEntity resEntityGet = responseGet.getEntity();  
-			        if (resEntityGet != null) {
-			        	tString = EntityUtils.toString(resEntityGet);
-			        }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		        Message message = new Message();
-		        Bundle data = new Bundle();
-		        data.putString("result", tString);
-		        message.setData(data);
-		        handler.sendMessage(message);
-			}
-		};
-		new Thread(runnable).start();
 	}
 
 	/*
@@ -312,6 +279,7 @@ public class Tooth2DFragment extends Fragment{
 	 * ???Initialization of the bottom bar
 	 */
 	private void initRadioButton(RadioButton[] radioButton, ArrayList <Integer> illCodeList){
+		radioGroup.removeAllViews();
 		DBManager mgr = new DBManager(this.context);
 		mgr.openDatabase();
 		SDDisease disease = new SDDisease();
@@ -324,7 +292,6 @@ public class Tooth2DFragment extends Fragment{
 
 		if(illCodeList.size()<2){
 			radioButton[0].setWidth(width/(illCodeList.size()+2));
-
 		}
 		for(int i=1; i<illCodeList.size()+1; i++){
 			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null);
@@ -358,24 +325,66 @@ public class Tooth2DFragment extends Fragment{
 		radioGroup.check(0);
 		this.context = rootView.getContext();
 		
-		//Update database
-		DBManager mgr = new DBManager(this.context);
-	    mgr.openDatabase();
-	    try {
-			mgr.updateDatabase(tString);
-			mgr.closeDB();
-			} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		handler = new Handler(){
+		    @Override
+		    public void handleMessage(Message msg) {
+		        super.handleMessage(msg);
+		        Bundle data = msg.getData();
+		        String val = data.getString("result");
+		         
+				//Update database
+				DBManager mgr = new DBManager(context);
+			    mgr.openDatabase();
+			    try {
+					mgr.updateDatabase(tString);
+					mgr.closeDB();
+					} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    //Read database
+			  	getToothInfoFromDB();
+			  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
+				RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
+				initRadioButton(radioButton, illCodeList);
+		    }
+		};
+		
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				HttpClient client = new DefaultHttpClient();  
+		        HttpGet get = new HttpGet(getURL);
+		        
+		        try {
+					HttpResponse responseGet = client.execute(get);  
+			        HttpEntity resEntityGet = responseGet.getEntity();  
+			        if (resEntityGet != null) {
+			        	tString = EntityUtils.toString(resEntityGet);
+			        }
+				} catch (Exception e) {
+					e.printStackTrace();
+					getToothInfoFromDB();
+				  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
+					RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
+					initRadioButton(radioButton, illCodeList);
+				}
+		        Message message = new Message();
+		        Bundle data = new Bundle();
+		        data.putString("result", tString);
+		        message.setData(data);
+		        handler.sendMessage(message);
+			}
+		};
+		new Thread(runnable).start();
 	    //Read database
-	  	getToothInfoFromDB();
+	  	toothInfo = new ArrayList <SDToothInfo>();
 		initImage();
 		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
 		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
 		initRadioButton(radioButton, illCodeList);
-		
-
 		
 		//Touch action handler
 		toothView.setOnTouchListener(new OnTouchListener(){
