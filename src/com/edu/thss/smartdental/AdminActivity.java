@@ -51,7 +51,7 @@ public class AdminActivity extends FragmentActivity {
 		nManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		nBuilder = new Notification.Builder(AdminActivity.this);
 		nBuilder.setDefaults(Notification.DEFAULT_LIGHTS);
-		nBuilder.setTicker("来自SmartDental的消息");
+		nBuilder.setTicker(getString(R.string.message_from_smartdental));
 		nBuilder.setContentTitle("SmartDental");
 		nBuilder.setSmallIcon(R.drawable.ic_launcher);
 	}

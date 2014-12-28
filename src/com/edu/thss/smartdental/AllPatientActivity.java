@@ -70,21 +70,21 @@ public class AllPatientActivity extends Activity {
 			tPosition = position;
 			AlertDialog.Builder builder = new AlertDialog.Builder(AllPatientActivity.this);
 			builder.setIcon(R.drawable.ic_launcher);
-			builder.setTitle("确认");
-			builder.setMessage("您真的要将" + list.get(position + 1).get("username") + "踢出圈子吗？");
-			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			builder.setTitle(getString(R.string.confirm));
+			builder.setMessage(getString(R.string.are_you_sure) + list.get(position + 1).get("username") + getString(R.string.kick_out_confirm));
+			builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					String t = db.kickout(list.get(tPosition + 1).get("username"), preferences.getString("username", ""));
 					if (t.equals("true"))
-						Toast.makeText(AllPatientActivity.this, "踢出成功", Toast.LENGTH_LONG).show();
+						Toast.makeText(AllPatientActivity.this, getString(R.string.kick_out_success), Toast.LENGTH_LONG).show();
 					else
 						if (t.equals("fail to connect to Database"))
-							Toast.makeText(AllPatientActivity.this, "连不上服务器", Toast.LENGTH_LONG).show();
+							Toast.makeText(AllPatientActivity.this, getString(R.string.message_link_fail), Toast.LENGTH_LONG).show();
 						else
-							Toast.makeText(AllPatientActivity.this, "未知错误", Toast.LENGTH_LONG).show();
+							Toast.makeText(AllPatientActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
 					list = db.getAllpatients(preferences.getString("username", ""));
 					ArrayList<String> data = new ArrayList<String>();
 					for (int i = 1; i < list.size(); i++) {
@@ -93,7 +93,7 @@ public class AllPatientActivity extends Activity {
 					allpatient.setAdapter(new ArrayAdapter<String>(AllPatientActivity.this, android.R.layout.simple_list_item_1, data));
 				}
 			});
-			builder.setNegativeButton("取消", null);
+			builder.setNegativeButton(getString(R.string.cancel), null);
 			builder.show();
 			return true;
 		}
