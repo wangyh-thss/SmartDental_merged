@@ -7,7 +7,7 @@ SharedPreferences preferences = getSharedPreferences("setting", MODE_PRIVATE);
 int userid = preferences.getInt("userid", -1);
 String username = preferences.getString("username", "");
 
-医生可以看到每个病人的详情。每个圈子的所有病人的列表在AllPatientActivity中实现，单击每个病人会跳转到其详情页面PatientInfoActivity。此病人的id保存在Intent的Extra中，通过getIntent().getIntExtra("patient_id",  -1)获取其用户id。
+医生可以看到每个病人的详情。每个圈子的所有病人的列表在AllPatientActivity中实现，单击每个病人会跳转到其详情页面PatientInfoActivity。此病人的username保存在Intent的Extra中，通过getIntent().getStringExtra("patient_username")获取其username。
 详见PatientInfoActivity.java
 
 合作愉快，祝好！

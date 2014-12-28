@@ -87,4 +87,7 @@
     <string name="message_publish_succeed">发布成功</string>
     <string name="message_link_fail">连不上服务器</string>
     <string name="no_news">暂时没有新的未读消息。</string>
+    <string name="post_empty_title">标题不能为空</string>
+    <string name="post_empty_content">内容不能为空</string>
+    <string name="post_ok">发布成功</string>
 </resources>

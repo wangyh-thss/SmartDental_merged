@@ -37,12 +37,12 @@ public class BBSInTabManageFragment extends Fragment {
 		public void onClick(View v) {
 			String t = db.setcirclePassword(circle_password_edit.getText().toString(), preferences.getString("username", ""));
 			if (t.equals("true"))
-				Toast.makeText(getActivity(), "密码修改成功", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getString(R.string.change_password_success), Toast.LENGTH_LONG).show();
 			else
 				if (t.equals("fail to connect to Database"))
-					Toast.makeText(getActivity(), "连不上服务器", Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), getString(R.string.message_link_fail), Toast.LENGTH_LONG).show();
 				else
-					Toast.makeText(getActivity(), "未知错误", Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
 		}
 	};
 	

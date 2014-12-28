@@ -1,6 +1,6 @@
 /*
- * 娴ｆ粏锟藉拑绱伴悳瀣暏閻愶拷
- * 閺冦儲婀￠敍锟�2014楠烇拷12閺堬拷11閺冿拷
+ * 濞达絾绮忛敓钘夋嫅缁变即鎮崇�ｎ亞鏆忛柣鎰舵嫹
+ * 闁哄啨鍎插﹢锟犳晬閿燂拷2014妤犵儑鎷�12闁哄牞鎷�11闁哄喛鎷�
  */
 package com.edu.thss.smartdental.adapter;
 
@@ -138,12 +138,17 @@ public class CommentAdapter extends BaseAdapter {
 				intent.setClass(context, InputActivity.class);
 				intent.putExtra("commentId", String.valueOf(commentId));
 				intent.putExtra("postId", String.valueOf(postId));
-				//intent.putExtra("username", preferences.getString("username", ""));
 				context.startActivity(intent);
 				//startActivity(intent);
 				//notifyDataSetChanged();
 			}
 		}
+		
+	}
+	
+	public void setList(ArrayList<CommentElement> list){
+		this.list.clear();
+		this.list = list;
 		
 	}
 	
