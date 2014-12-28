@@ -550,6 +550,9 @@ public final class R {
         public static final int ok=0x7f08001d;
         public static final int old_password_wrong=0x7f080044;
         public static final int password=0x7f080035;
+        public static final int post_empty_content=0x7f080057;
+        public static final int post_empty_title=0x7f080056;
+        public static final int post_ok=0x7f080058;
         public static final int register=0x7f080038;
         public static final int register_ing=0x7f080039;
         public static final int register_success=0x7f08003a;

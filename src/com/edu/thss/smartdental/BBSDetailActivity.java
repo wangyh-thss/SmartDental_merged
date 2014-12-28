@@ -160,4 +160,23 @@ public class BBSDetailActivity extends Activity {
 		editor.putBoolean("justDeleted", true);
 		editor.commit();
 	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		//commentAdapter.notifyDataSetChanged();
+		SharedPreferences preferences = getSharedPreferences("setting", MODE_PRIVATE);
+		boolean justReplied = preferences.getBoolean("justReplied", true);
+		if(justReplied){
+			//setContentView(R.layout.activity_bbs_detail);
+			initPosts1();
+			commentAdapter.setList(posts1);
+			commentAdapter.notifyDataSetChanged();
+			Editor editor = preferences.edit();
+			editor.putBoolean("justReplied", false);
+			editor.commit();
+			
+		}
+		super.onResume();
+	}
 }

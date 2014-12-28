@@ -146,4 +146,10 @@ public class CommentAdapter extends BaseAdapter {
 		
 	}
 	
+	public void setList(ArrayList<CommentElement> list){
+		this.list.clear();
+		this.list = list;
+		
+	}
+	
 }

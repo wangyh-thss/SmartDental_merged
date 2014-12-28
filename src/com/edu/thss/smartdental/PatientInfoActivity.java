@@ -16,7 +16,7 @@ public class PatientInfoActivity extends FragmentActivity {
 		setContentView(R.layout.activity_patient_info);
 		Intent intent = getIntent();
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		int patient_username = intent.getIntExtra("patient_id", -1);
+		String patient_username = intent.getStringExtra("patient_username");
 		Fragment fragment = new Tooth2DFragment(patient_username);
 		if(fragment != null){
 			fragmentManager.beginTransaction().replace(R.id.patient_tooth, fragment).commit();
@@ -24,5 +24,7 @@ public class PatientInfoActivity extends FragmentActivity {
 		else {
 			Log.e("MainActivity", "Error in creating fragment");
 		}
+		
+		
 	}
 }

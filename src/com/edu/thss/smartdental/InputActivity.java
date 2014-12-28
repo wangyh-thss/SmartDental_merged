@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle; 
 import android.view.MotionEvent; 
 import android.view.View; 
@@ -117,6 +118,10 @@ public class InputActivity extends Activity {
 								finish();
 							}
 						});
+					SharedPreferences preferences = getSharedPreferences("setting", MODE_PRIVATE);
+					Editor editor = preferences.edit();
+					editor.putBoolean("justReplied", true);
+					editor.commit();
 					builder.show();
 				}
 				else {
