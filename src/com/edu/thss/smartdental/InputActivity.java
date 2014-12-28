@@ -42,6 +42,7 @@ public class InputActivity extends Activity {
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) { 
 		newsDB = new NewsDBUtil();
+		commentDB = new CommentDBUtil();
 		
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_input); 
@@ -55,7 +56,6 @@ public class InputActivity extends Activity {
 		userName=preferences.getString("username", "");
 		
 		if(!comment_id.equals("")){
-			commentDB = new CommentDBUtil();
 			comment = commentDB.getCommentById(Integer.parseInt(comment_id));
 			type="reply";
 			toName = comment.get(1).get("commentusername");

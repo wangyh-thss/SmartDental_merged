@@ -3,6 +3,7 @@ package com.edu.thss.smartdental.adapter;
 import java.util.ArrayList;
 
 import com.edu.thss.smartdental.BBSDetailActivity;
+import com.edu.thss.smartdental.InputActivity;
 import com.edu.thss.smartdental.MainActivity;
 import com.edu.thss.smartdental.R;
 import com.edu.thss.smartdental.RemoteDB.PostDBUtil;
@@ -10,8 +11,10 @@ import com.edu.thss.smartdental.model.BBSDetail;
 
 
 
+
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -200,7 +203,17 @@ public class BBSDetailAdapter extends BaseAdapter implements Filterable{
     	}
     	@Override
     	public void onClick(View v){
-    		context1.beginReply();    		
+    		//context1.beginReply();  
+    		
+    		Intent intent = new Intent();
+			//context = context.getApplicationContext();
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setClass(context, InputActivity.class);
+			intent.putExtra("commentId", "");
+			intent.putExtra("postId", context1.getPostId());
+			context.startActivity(intent);
+    		
+    		
     	}
     }
 
