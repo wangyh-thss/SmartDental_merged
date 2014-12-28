@@ -170,6 +170,7 @@ public class BBSDetailActivity extends Activity {
 		if(justReplied){
 			//setContentView(R.layout.activity_bbs_detail);
 			initPosts1();
+			commentAdapter.setList(posts1);
 			commentAdapter.notifyDataSetChanged();
 			Editor editor = preferences.edit();
 			editor.putBoolean("justReplied", false);
