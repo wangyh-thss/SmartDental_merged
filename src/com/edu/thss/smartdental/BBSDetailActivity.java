@@ -1,11 +1,14 @@
 package com.edu.thss.smartdental;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.AnalogClock;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -29,6 +32,7 @@ public class BBSDetailActivity extends Activity {
 	private CommentAdapter commentAdapter;
 	private Context context;
 	private BBSDetailActivity context1;
+	private ActionBar actionBar;
 	private String post_id;
 	private SharedPreferences preferences = null;
 	private String author, time, content, title, localUser;
@@ -47,6 +51,8 @@ public class BBSDetailActivity extends Activity {
 
 		list2 = (ListView) findViewById(R.id.listView2);
 		initPosts();
+		actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		context = this.getApplicationContext();
 		context1 = this;
 		bbsAdapter = new BBSDetailAdapter(posts, context, context1);
@@ -187,5 +193,19 @@ public class BBSDetailActivity extends Activity {
 			
 		}
 		super.onResume();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

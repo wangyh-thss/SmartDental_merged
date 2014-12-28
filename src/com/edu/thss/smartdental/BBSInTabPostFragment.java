@@ -1,6 +1,5 @@
 /*
- * 作者：王宇炜
- * 日期：2014年12月7日
+ * author: Wang Yuwei
  */
 package com.edu.thss.smartdental;
 
@@ -30,9 +29,16 @@ public class BBSInTabPostFragment extends Fragment {
 	private EditText edit_bbs_content;
 	private EditText edit_bbs_title;
 	private Spinner edit_tab_spinner;
+	private String userName;
 	private ArrayAdapter adapter; 
 	private static SharedPreferences preferences = null;
 	private static Editor editor = null;
+	
+	public BBSInTabPostFragment(String userName) {
+		// TODO Auto-generated constructor stub
+		this.userName = userName;
+	}
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		preferences = preferences == null ? this.getActivity().getSharedPreferences("setting", Activity.MODE_PRIVATE) : preferences;
@@ -58,18 +64,23 @@ public class BBSInTabPostFragment extends Fragment {
 			String title = edit_bbs_title.getText().toString();
 			String content = edit_bbs_content.getText().toString();
 			String tabName = edit_tab_spinner.getSelectedItem().toString();
+			String circle_id = preferences.getString("current_circle_id", "");
 			if (title.equals("")) {
-				Toast.makeText(getActivity(), "请填写帖子标题", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getString(R.string.post_empty_title), Toast.LENGTH_LONG).show();
 				return;
 			}
 			if (content.equals("")) {
-				Toast.makeText(getActivity(), "请填写帖子内容", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getString(R.string.post_empty_content), Toast.LENGTH_LONG).show();
 				return;
 			}
-			PostElement postElement = new PostElement(title, content, preferences.getString("username", ""), tabName, preferences.getString("current_circle_id", ""), new Date(), false);
+			if (circle_id.equals("")) {
+				Toast.makeText(getActivity(), getString(R.string.post_none_circle), Toast.LENGTH_LONG).show();
+				return;
+			}
+			PostElement postElement = new PostElement(title, content, userName, tabName, circle_id, new Date(), false);
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			postElement.insertToDB();
-			builder.setMessage("发布成功")
+			builder.setMessage(getString(R.string.post_ok))
 				   .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					
 					@Override
@@ -79,7 +90,9 @@ public class BBSInTabPostFragment extends Fragment {
 						FragmentTransaction ft = getFragmentManager().beginTransaction();
 						ft.replace(R.id.bbs_in_tab_content, new BBSInTabViewFragment());
 						ft.commit();*/
-						
+						editor.putBoolean("justDeleted", true);
+						editor.commit();
+						((MainActivity)getActivity()).onResume();
 					}
 				});
 			builder.show();
