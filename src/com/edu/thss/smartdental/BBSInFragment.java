@@ -63,13 +63,6 @@ public class BBSInFragment extends Fragment {
 		if(!db.getuseridentity(this.userName).equals("doctor")){
 			manageTag.setVisibility(View.GONE);
 			invisible_button.setVisibility(View.GONE);
-		} else {
-			SharedPreferences sharedPreferences = getActivity().getSharedPreferences("setting", Activity.MODE_PRIVATE);
-			Editor editor = sharedPreferences.edit();
-			
-			editor.putString("current_circle", sharedPreferences.getString("username", ""));
-			editor.putString("current_circle_id", Integer.toString(sharedPreferences.getInt("userid", -1)));
-			editor.commit();
 		}
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 			

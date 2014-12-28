@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -38,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.view.View.OnClickListener;
 
 public class Tooth2DFragment extends Fragment{
@@ -45,12 +47,12 @@ public class Tooth2DFragment extends Fragment{
 	private Bitmap template; // Template picture for locate
 	private Bitmap tooth2D; // Picture for view
 
-	private ImageView toothView; //Main imageview
+	private ImageView toothView; //Main imageView
 
 	private ArrayList <Integer> pCode, pCoor; //Store the point set of every tooth
 	private ArrayList <Integer> pColored; //Store the list of filled teeth
 
-	private ArrayList <SDToothInfo> toothInfo; //Tooth infomation, from database
+	private ArrayList <SDToothInfo> toothInfo; //Tooth information, from database
 
 	private int currentSelectTooth, currentSelectColor; //Store the status
 	private RadioGroup radioGroup;
@@ -58,12 +60,13 @@ public class Tooth2DFragment extends Fragment{
 	private Handler handler;
 	private String getURL = "";
 	private String tString = "";
-	private DBManager mgr;
+	//private DBManager mgr;
 
 	Context context;
 
 	public Tooth2DFragment(String userName){
 		getURL = "http://166.111.80.119/userinfo/tooth?user=" + userName;
+		Log.i("Tooth2DUserName", userName);
 		handler = new Handler(){
 		    @Override
 		    public void handleMessage(Message msg) {
@@ -341,6 +344,7 @@ public class Tooth2DFragment extends Fragment{
 		if(illCodeList.size()<2){
 			radioButton[illCodeList.size()+1].setWidth(width/(illCodeList.size()+2));
 		}
+		mgr.closeDB();
 	}
 
 	@Override
@@ -352,19 +356,11 @@ public class Tooth2DFragment extends Fragment{
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
 		radioGroup.check(0);
-
-		//Read database
-		getToothInfoFromDB();
-
 		this.context = rootView.getContext();
-		initImage();
-		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
-		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
-		initRadioButton(radioButton, illCodeList);
-
-		mgr = new DBManager(this.context);
+		
+		//Update database
+		DBManager mgr = new DBManager(this.context);
 	    mgr.openDatabase();
-	    
 	    try {
 			mgr.updateDatabase(tString);
 			mgr.closeDB();
@@ -372,6 +368,14 @@ public class Tooth2DFragment extends Fragment{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	    //Read database
+	  	getToothInfoFromDB();
+		initImage();
+		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
+		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
+		initRadioButton(radioButton, illCodeList);
+		
+
 		
 		//Touch action handler
 		toothView.setOnTouchListener(new OnTouchListener(){
@@ -520,14 +524,22 @@ public class Tooth2DFragment extends Fragment{
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putCharSequence("imageclass", currentCaseId);
-				intent.putExtras(bundle);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				if(currentCaseId != "" && currentCaseId != null){
+					Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putCharSequence("imageclass", currentCaseId);
+					intent.putExtras(bundle);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(intent);
+				}
+				else{
+					Toast toast = Toast.makeText(Tooth2DFragment.this.getActivity(),"No case found!", Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
 			}
 		});
+        mgr.closeDB();
         dialog.show();
     }
 }

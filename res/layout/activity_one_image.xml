@@ -13,11 +13,18 @@
 		    android:layout_height="fill_parent"
 		    android:layout_gravity="center"
 		    android:background="@color/app_white"
+		     android:paddingTop="20dp"
+		    android:paddingBottom="10dp"
 		    android:paddingLeft="10dp"
 		    android:paddingRight="10dp" >
 		    <TextView android:id="@+id/notate_info_name"
-		    	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"/>
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="wrap_content"
+		    	android:textSize="18sp"
+		    	android:textColor="#696969"
+		    	android:background="@drawable/bg_border"
+		    	android:padding="10dp"
+		    	/>
 		    
 		    <ImageView
 		        android:id="@+id/one_image_view"
