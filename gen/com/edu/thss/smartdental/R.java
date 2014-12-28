@@ -531,6 +531,9 @@ public final class R {
         public static final int no_news=0x7f080040;
         public static final int ok=0x7f08001d;
         public static final int password=0x7f080030;
+        public static final int post_empty_content=0x7f080042;
+        public static final int post_empty_title=0x7f080041;
+        public static final int post_ok=0x7f080043;
         public static final int register=0x7f080032;
         public static final int repeat_password=0x7f080033;
         public static final int return_back=0x7f080034;

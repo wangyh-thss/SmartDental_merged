@@ -1,3 +1,6 @@
+/*
+ * author: Wang Yuwei
+ */
 package com.edu.thss.smartdental.adapter;
 
 import java.util.ArrayList;
