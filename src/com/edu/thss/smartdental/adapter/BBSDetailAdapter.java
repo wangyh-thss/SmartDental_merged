@@ -94,7 +94,7 @@ public class BBSDetailAdapter extends BaseAdapter implements Filterable{
 		holder.reply.setOnClickListener(new replyButtonListner());
 		
 		//judge the delete button and collect button show or not
-		if(!context1.isLocalUser()){
+		if(!context1.isLocalUser() && !context1.userIsTheDoctor()){
 			holder.delete.setVisibility(View.INVISIBLE);
 		}
 		else{
@@ -167,17 +167,16 @@ public class BBSDetailAdapter extends BaseAdapter implements Filterable{
 		public void onClick(View v) {
 
 			int vid = v.getId();
-			if(context1.isLocalUser()){
-				//delete the post 
-				PostDBUtil dbUtil = new PostDBUtil();
-				dbUtil.deletePost(Integer.parseInt(context1.getPostId()));
+			//delete the post 
+			PostDBUtil dbUtil = new PostDBUtil();
+			dbUtil.deletePost(Integer.parseInt(context1.getPostId()));
 				
-				list.remove(itemPosition);
-				notifyDataSetChanged();
-				context1.markDelete();
-				context1.finish();
+			list.remove(itemPosition);
+			notifyDataSetChanged();
+			context1.markDelete();
+			context1.finish();
                 
-			}
+			
 			
 		}
     }
