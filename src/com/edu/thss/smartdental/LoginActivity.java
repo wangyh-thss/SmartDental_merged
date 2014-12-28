@@ -58,16 +58,16 @@ public class LoginActivity extends Activity {
             	pd.dismiss();
             	break;
             case 1:
-            	Toast.makeText(LoginActivity.this, "用户不存在", Toast.LENGTH_LONG).show();
+            	Toast.makeText(LoginActivity.this, getString(R.string.user_does_not_exist), Toast.LENGTH_LONG).show();
             	break;
             case 2:
-            	Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
+            	Toast.makeText(LoginActivity.this, getString(R.string.wrong_password), Toast.LENGTH_LONG).show();
             	break;
             case 3:
-            	Toast.makeText(LoginActivity.this, "连不上服务器", Toast.LENGTH_LONG).show();
+            	Toast.makeText(LoginActivity.this, getString(R.string.message_link_fail), Toast.LENGTH_LONG).show();
             	break;
             case 4:
-            	Toast.makeText(LoginActivity.this, "未知错误", Toast.LENGTH_LONG).show();
+            	Toast.makeText(LoginActivity.this, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
             	break;
             default:
             	break;	
@@ -128,7 +128,7 @@ public class LoginActivity extends Activity {
 	
 	private OnClickListener loginListener = new OnClickListener() {
 		public void onClick(View v) {
-			pd = ProgressDialog.show(LoginActivity.this, "", "登录中");
+			pd = ProgressDialog.show(LoginActivity.this, "", getString(R.string.login_ing));
 	        new Thread(new loginThread()).start();
 		}
 	};

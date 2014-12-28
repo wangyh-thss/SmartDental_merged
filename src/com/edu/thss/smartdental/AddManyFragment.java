@@ -29,7 +29,7 @@ public class AddManyFragment extends Fragment {
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT); 
 		    intent.setType("*/*"); 
 		    intent.addCategory(Intent.CATEGORY_OPENABLE);
-	        startActivityForResult(Intent.createChooser(intent, "打开文件"), 0);
+	        startActivityForResult(Intent.createChooser(intent, getString(R.string.file_export)), 0);
 		}
 	};
 	
