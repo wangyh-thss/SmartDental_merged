@@ -12,6 +12,8 @@ import com.readystatesoftware.viewbadger.BadgeView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -61,6 +63,13 @@ public class BBSInFragment extends Fragment {
 		if(!db.getuseridentity(this.userName).equals("doctor")){
 			manageTag.setVisibility(View.GONE);
 			invisible_button.setVisibility(View.GONE);
+		} else {
+			SharedPreferences sharedPreferences = getActivity().getSharedPreferences("setting", Activity.MODE_PRIVATE);
+			Editor editor = sharedPreferences.edit();
+			
+			editor.putString("current_circle", sharedPreferences.getString("username", ""));
+			editor.putString("current_circle_id", Integer.toString(sharedPreferences.getInt("userid", -1)));
+			editor.commit();
 		}
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 			

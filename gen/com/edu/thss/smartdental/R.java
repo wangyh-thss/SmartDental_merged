@@ -547,6 +547,17 @@ public final class R {
         public static final int number_error=0x7f08004e;
         public static final int number_record=0x7f08004d;
         public static final int ok=0x7f08001d;
+<<<<<<< HEAD
+        public static final int password=0x7f080030;
+        public static final int post_empty_content=0x7f080042;
+        public static final int post_empty_title=0x7f080041;
+        public static final int post_ok=0x7f080043;
+        public static final int register=0x7f080032;
+        public static final int repeat_password=0x7f080033;
+        public static final int return_back=0x7f080034;
+        public static final int set_circle_password=0x7f08003a;
+        public static final int system_busy=0x7f080029;
+=======
         public static final int old_password_wrong=0x7f080044;
         public static final int password=0x7f080035;
         public static final int register=0x7f080038;
@@ -556,6 +567,7 @@ public final class R {
         public static final int return_back=0x7f08003c;
         public static final int set_circle_password=0x7f08004f;
         public static final int system_busy=0x7f08002e;
+>>>>>>> eace437a5d05dcd4b08814ad4be8c642e2b4e6b6
         public static final int title_activity_admin=0x7f080012;
         public static final int title_activity_all_patient=0x7f080016;
         public static final int title_activity_change_password=0x7f080011;

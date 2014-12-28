@@ -60,7 +60,7 @@ public class AllPatientActivity extends Activity {
 		public void onItemClick(AdapterView<?>adapterView, View view, int position, long id) {
 			Intent intent = new Intent();
 			intent.setClass(AllPatientActivity.this, PatientInfoActivity.class);
-			intent.putExtra("patient_id", Integer.parseInt((list.get(position + 1).get("userid"))));
+			intent.putExtra("patient_username", list.get(position + 1).get("username"));
 			startActivity(intent);
 		}
 	};
