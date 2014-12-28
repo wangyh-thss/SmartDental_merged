@@ -25,7 +25,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,7 +51,7 @@ public class Tooth2DFragment extends Fragment{
 	private ArrayList <Integer> pCode, pCoor; //Store the point set of every tooth
 	private ArrayList <Integer> pColored; //Store the list of filled teeth
 
-	private ArrayList <SDToothInfo> toothInfo; //Tooth information, from database
+	private ArrayList <SDToothInfo> toothInfo; //Tooth infomation, from database
 
 	private int currentSelectTooth, currentSelectColor; //Store the status
 	private RadioGroup radioGroup;
@@ -66,7 +65,6 @@ public class Tooth2DFragment extends Fragment{
 
 	public Tooth2DFragment(String userName){
 		getURL = "http://166.111.80.119/userinfo/tooth?user=" + userName;
-		Log.i("Tooth2DUserName", userName);
 	}
 
 	/*
@@ -74,7 +72,7 @@ public class Tooth2DFragment extends Fragment{
 	 */
 
 	/**
-	 * Initialization of tooth picture
+	 * Initialization for tooth picture
 	 */
 	private void initImage(){
 		template = BitmapFactory.decodeResource(getResources(), R.drawable.tooth_2d);
@@ -118,6 +116,70 @@ public class Tooth2DFragment extends Fragment{
 		toothView.setImageBitmap(tooth2D);
 	}
 
+	/**
+	 * Initialization for RadioButton
+	 * @param illCodeList
+	 */
+	private void initRadioButton(ArrayList <Integer> illCodeList){
+		radioGroup.removeAllViews();
+		DBManager mgr = new DBManager(this.context);
+		mgr.openDatabase();
+		SDDisease disease = new SDDisease();
+		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
+
+		int width = getResources().getDisplayMetrics().widthPixels;
+		radioButton[0] = createButton(0, "牙齿图");
+		if(illCodeList.size()<2){
+			radioButton[0].setWidth(width/(illCodeList.size()+2));
+		}
+		for (int i = 1; i < illCodeList.size() + 1; ++i){
+			//NO. (i-1) illness assign to NO. (i+1) button
+			int id = illCodeList.get(i - 1);
+			disease = mgr.queryDiseaseById(id);
+			radioButton[i] = createButton(id + 1, disease.name);
+			if(illCodeList.size() < 2){
+				radioButton[i].setWidth(width / (illCodeList.size() + 2));
+			}
+		}
+
+		radioButton[illCodeList.size() + 1] = createButton(1, "全部");
+		if(illCodeList.size()<2){
+			radioButton[illCodeList.size()+1].setWidth(width/(illCodeList.size()+2));
+		}
+
+		for (int i = 0; i < illCodeList.size() + 2; ++i){
+			radioGroup.addView(radioButton[i]);
+		}
+	}
+	
+	/**
+	 * Initialization for Handler
+	 */
+	private void initHandler() {
+		handler = new Handler(){
+		    @Override
+		    public void handleMessage(Message msg) {
+		        super.handleMessage(msg);
+		        Bundle data = msg.getData();
+		        String val = data.getString("result");
+		         
+				//Update database
+				DBManager mgr = new DBManager(context);
+			    mgr.openDatabase();
+			    try {
+					mgr.updateDatabase(tString);
+					mgr.closeDB();
+					} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    //Read database
+			  	getToothInfoFromDB();
+			  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
+				initRadioButton(illCodeList);
+		    }
+		};
+	}
 
 	/*
 	 * Process functions
@@ -201,8 +263,9 @@ public class Tooth2DFragment extends Fragment{
 		pColored.clear();
 	}
 
-	/*
-	 * ???Fill the teeth which suffer the specified illness(es)
+	/**
+	 * Fill the teeth which suffer the specified illness(es)
+	 * @param illCodeList
 	 */
 	private void fillToothByIllness(ArrayList <Integer> illCodeList) {
 		ArrayList <Integer> illTeethList = getTeethArrayByIllness(illCodeList);
@@ -210,7 +273,7 @@ public class Tooth2DFragment extends Fragment{
 		clearToothColor();
 
 		if(illCodeList.get(0) == 1){
-			for(int i = 0; i < 32; i++){
+			for(int i = 1; i <= 32; i++){
 				if(!illTeethList.contains(i)){
 					fillToothColor(i, color);
 					pColored.add(i);
@@ -255,6 +318,20 @@ public class Tooth2DFragment extends Fragment{
 		return illCodeList;
 	}
 
+	/**
+	 * Create a new button
+	 * @param id    button id
+	 * @param text    button text
+	 * @return button
+	 */
+	private RadioButton createButton(int id, String text){
+		RadioButton result;
+		result = (RadioButton)LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null);
+		result.setId(id);
+		result.setText(text);
+		return result;
+	}
+
 	/*
 	 * Database interface
 	 */
@@ -276,43 +353,8 @@ public class Tooth2DFragment extends Fragment{
 	}
 
 	/*
-	 * ???Initialization of the bottom bar
+	 * View interface
 	 */
-	private void initRadioButton(RadioButton[] radioButton, ArrayList <Integer> illCodeList){
-		radioGroup.removeAllViews();
-		DBManager mgr = new DBManager(this.context);
-		mgr.openDatabase();
-		SDDisease disease = new SDDisease();
-		String buttonText = new String();
-		int width = getResources().getDisplayMetrics().widthPixels;
-		radioButton[0]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null);
-		radioButton[0].setId(0);
-		radioButton[0].setText("牙齿图");
-		radioGroup.addView(radioButton[0]);
-
-		if(illCodeList.size()<2){
-			radioButton[0].setWidth(width/(illCodeList.size()+2));
-		}
-		for(int i=1; i<illCodeList.size()+1; i++){
-			radioButton[i]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null);
-			radioButton[i].setId(illCodeList.get(i-1)+1);
-			disease = mgr.queryDiseaseById(illCodeList.get(i-1));
-			buttonText = disease.name;
-			radioButton[i].setText(buttonText);
-			radioGroup.addView(radioButton[i]);
-			if(illCodeList.size()<2){
-				radioButton[i].setWidth(width/(illCodeList.size()+2));
-			}
-		}
-		radioButton[illCodeList.size()+1]=(RadioButton) LayoutInflater.from(super.getActivity()).inflate(R.layout.radiobutton, null);
-		radioButton[illCodeList.size()+1].setId(1);
-		radioButton[illCodeList.size()+1].setText("全部");
-		radioGroup.addView(radioButton[illCodeList.size()+1]);
-		if(illCodeList.size()<2){
-			radioButton[illCodeList.size()+1].setWidth(width/(illCodeList.size()+2));
-		}
-		mgr.closeDB();
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -322,34 +364,13 @@ public class Tooth2DFragment extends Fragment{
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
-		radioGroup.check(0);
+
+		//Read database
+		getToothInfoFromDB();
+
 		this.context = rootView.getContext();
 		
-		
-		handler = new Handler(){
-		    @Override
-		    public void handleMessage(Message msg) {
-		        super.handleMessage(msg);
-		        Bundle data = msg.getData();
-		        String val = data.getString("result");
-		         
-				//Update database
-				DBManager mgr = new DBManager(context);
-			    mgr.openDatabase();
-			    try {
-					mgr.updateDatabase(tString);
-					mgr.closeDB();
-					} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			    //Read database
-			  	getToothInfoFromDB();
-			  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
-				RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
-				initRadioButton(radioButton, illCodeList);
-		    }
-		};
+		initHandler();
 		
 		Runnable runnable = new Runnable() {
 			@Override
@@ -369,7 +390,7 @@ public class Tooth2DFragment extends Fragment{
 					getToothInfoFromDB();
 				  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
 					RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
-					initRadioButton(radioButton, illCodeList);
+					initRadioButton(illCodeList);
 				}
 		        Message message = new Message();
 		        Bundle data = new Bundle();
@@ -383,9 +404,9 @@ public class Tooth2DFragment extends Fragment{
 	  	toothInfo = new ArrayList <SDToothInfo>();
 		initImage();
 		ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
-		RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
-		initRadioButton(radioButton, illCodeList);
-		
+		initRadioButton(illCodeList);
+		radioGroup.check(0);
+
 		//Touch action handler
 		toothView.setOnTouchListener(new OnTouchListener(){
 
@@ -458,7 +479,6 @@ public class Tooth2DFragment extends Fragment{
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				ArrayList <Integer> illCodeList = new ArrayList <Integer>();
-				ArrayList <Integer> illCodeList_ = getDiagnoseArrayByIllness();
 				if (checkedId == 0){
 					clearToothColor();
 				}
