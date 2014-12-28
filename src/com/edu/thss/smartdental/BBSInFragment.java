@@ -152,13 +152,13 @@ public class BBSInFragment extends Fragment {
 			tempfragment = new BBSInTabNewsFragment(newsList);
 			break;
 		case 3:
-			//tempfragment = new BBSInTabPostFragment();
-			Intent intent = new Intent();
-			intent.setClass(getActivity().getApplicationContext(), PostBBSActivity.class);
+			tempfragment = new BBSInTabPostFragment(this.userName);
+//			Intent intent = new Intent();
+//			intent.setClass(getActivity().getApplicationContext(), PostBBSActivity.class);
 //			intent.putExtra("postId", 11);
 //			intent.putExtra("username", "yy");
-			startActivity(intent);
-			radioGroup.check(R.id.bbs_in_tab_view);
+//			startActivity(intent);
+//			radioGroup.check(R.id.bbs_in_tab_view);
 			break;
 		case 4:
 			tempfragment = new BBSInTabManageFragment();
