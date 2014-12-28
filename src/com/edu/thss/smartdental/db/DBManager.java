@@ -185,8 +185,16 @@ public class DBManager {
 		c.close();
 		return knowledge;
 	}
-
+    
+	public void initDatabase() {
+		String sql = new String("update tooth set diagnose = 0");
+		db.execSQL(sql);
+		sql = new String("update tooth set recordId = \"null\"");
+		db.execSQL(sql);
+	}
+	
 	public void updateDatabase(String data) throws JSONException {
+		initDatabase();
 		JSONArray jsonArray =new JSONArray(data);
 		
 		for (int i = 0; i < jsonArray.length(); i++) {
