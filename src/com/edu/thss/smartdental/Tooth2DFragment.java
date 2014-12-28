@@ -520,12 +520,19 @@ public class Tooth2DFragment extends Fragment{
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putCharSequence("imageclass", currentCaseId);
-				intent.putExtras(bundle);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				if(currentCaseId != "" && currentCaseId != null){
+					Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putCharSequence("imageclass", currentCaseId);
+					intent.putExtras(bundle);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(intent);
+				}
+				else{
+					Toast toast = Toast.makeText(Tooth2DFragment.this.getActivity(),"No case found!", Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
 			}
 		});
         dialog.show();
