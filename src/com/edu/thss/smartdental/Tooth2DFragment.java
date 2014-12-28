@@ -520,7 +520,7 @@ public class Tooth2DFragment extends Fragment{
 
 			@Override
 			public void onClick(View v) {
-				if(currentCaseId != ""){
+				if(currentCaseId != "" && currentCaseId != null){
 					Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putCharSequence("imageclass", currentCaseId);
