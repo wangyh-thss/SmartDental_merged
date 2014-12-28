@@ -129,6 +129,8 @@ public class Tooth2DFragment extends Fragment{
 	}
 	
 	private void fill(int code, int color, ImageView toothView){
+		if (code < 1 || code >  32)
+			return;
 		int w = tooth2D.getWidth();
 		for (int i = 0; i < pCoor.size(); ++i){
 			if (pCode.get(i) == code)
@@ -283,12 +285,7 @@ public class Tooth2DFragment extends Fragment{
 				
 				System.out.println(x);
 				System.out.println(y);
-				//toothView.
-				//touchY = (int)(event.getY()/toothView.scale);
-			    //AlertDialog.Builder builder = new AlertDialog
-			    //		.Builder(com.edu.thss.smartdental.model.tooth.Tooth2DFragment.this); 
-				//builder.setMessage(Float.toString(scaleX));
-				//builder.show();
+				
 				if (x < 0 || x >= imageW || y < 0 || y >= imageH)
 					return false;
 				int code = -1;
@@ -322,11 +319,13 @@ public class Tooth2DFragment extends Fragment{
 						}
 						else {
 							fill(currentSelectTooth, currentSelectColor, toothView);
+							currentSelectTooth = -1;
 						}
 						break;
 					case MotionEvent.ACTION_UP:
 						if (code >= 0){
 							fill(code, currentSelectColor, toothView);
+							currentSelectTooth = -1;
 							
 							DBManager mgr = new DBManager(context);
 							mgr.openDatabase();
