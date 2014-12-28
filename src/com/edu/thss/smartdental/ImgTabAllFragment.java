@@ -21,6 +21,9 @@ import com.edu.thss.smartdental.model.general.HttpGetProcess;
 
 import android.R.bool;
 import android.R.id;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -59,7 +63,7 @@ public class ImgTabAllFragment extends Fragment{
 	}
 	
 	public void getJSON(String src){
-		//´ÓÍøÉÏ»ñÈ¡µÄJSONÖÐ½âÎö
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ï»ï¿½È¡ï¿½ï¿½JSONï¿½Ð½ï¿½ï¿½ï¿½
 		try {
 			JSONTokener jsonParser = new JSONTokener(src);
 			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
@@ -128,8 +132,10 @@ public class ImgTabAllFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		images = null;
-		new HttpGetProcess(handler, JSON, new GetUrlByTag().GetUrl(tagnum), new GetImagesInfo()).start();
+		images = new ArrayList<ImageElement>();
+		SharedPreferences preferences = getActivity().getSharedPreferences("setting", Activity.MODE_PRIVATE);
+		String username = preferences.getString("username", "");
+		new HttpGetProcess(handler, JSON, new GetUrlByTag(username).GetUrl(tagnum), new GetImagesInfo()).start();
 	}
 	
 }
