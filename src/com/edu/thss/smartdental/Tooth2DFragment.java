@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -364,14 +365,9 @@ public class Tooth2DFragment extends Fragment{
 		View rootView = inflater.inflate(R.layout.tooth_2d, container,false);
 		toothView = (ImageView)rootView.findViewById(R.id.tooth_2d_img);
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_2d_tab);
-
-		//Read database
-		getToothInfoFromDB();
-
 		this.context = rootView.getContext();
 		
 		initHandler();
-		
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
@@ -389,7 +385,6 @@ public class Tooth2DFragment extends Fragment{
 					e.printStackTrace();
 					getToothInfoFromDB();
 				  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
-					RadioButton[] radioButton = new RadioButton[illCodeList.size()+2];
 					initRadioButton(illCodeList);
 				}
 		        Message message = new Message();
@@ -553,18 +548,20 @@ public class Tooth2DFragment extends Fragment{
 
 			@Override
 			public void onClick(View v) {
-				if(currentCaseId != "" && currentCaseId != null){
+				Log.v("caseId",currentCaseId);
+				if(currentCaseId == null || currentCaseId.equals("null")){
+					Log.v("caseId","hahaha");
+					Toast toast = Toast.makeText(Tooth2DFragment.this.getActivity(),"我是健康哒！", Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
+				else{
 					Intent intent = new Intent(Tooth2DFragment.this.getActivity(), OneImageActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putCharSequence("imageclass", currentCaseId);
 					intent.putExtras(bundle);
 					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					context.startActivity(intent);
-				}
-				else{
-					Toast toast = Toast.makeText(Tooth2DFragment.this.getActivity(),"No case found!", Toast.LENGTH_LONG);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
 				}
 			}
 		});
