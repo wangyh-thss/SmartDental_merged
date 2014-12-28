@@ -53,8 +53,8 @@ public class InfoFragment extends Fragment{
 	private static final int EDIT_ALLERGY_CODE = 7;
 	private static final int EDIT_FAMILY_CODE = 8;
 
-	private Handler handler;
-	private String tString = "";
+	//private Handler handler;
+	//private String tString = "";
 	
 	ImageView editbasic;
 	ImageView editextends;
@@ -118,44 +118,44 @@ public class InfoFragment extends Fragment{
 		}
 	};
 	public InfoFragment(){
-		handler = new Handler(){
-		    @Override
-		    public void handleMessage(Message msg) {
-		        super.handleMessage(msg);
-		        Bundle data = msg.getData();
-		        String val = data.getString("result");
-		    }
-		};
-		
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				HttpClient client = new DefaultHttpClient();  
-		        String getURL = "http://166.111.80.119/userinfo/tooth?user=baoye";
-		        HttpGet get = new HttpGet(getURL);
-		        
-		        try {
-					HttpResponse responseGet = client.execute(get);  
-			        HttpEntity resEntityGet = responseGet.getEntity();  
-			        if (resEntityGet != null) {  
-			                    //do something with the response
-			        	tString = EntityUtils.toString(resEntityGet);
-
-			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
-			        	//Log.v("printtstring", tString);
-			        }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		        Message message = new Message();
-		        Bundle data = new Bundle();
-		        data.putString("result", tString);
-		        message.setData(data);
-		        handler.sendMessage(message);
-			}
-		};
-		new Thread(runnable).start();
+//		handler = new Handler(){
+//		    @Override
+//		    public void handleMessage(Message msg) {
+//		        super.handleMessage(msg);
+//		        Bundle data = msg.getData();
+//		        String val = data.getString("result");
+//		    }
+//		};
+//		
+//		Runnable runnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				HttpClient client = new DefaultHttpClient();  
+//		        String getURL = "http://166.111.80.119/userinfo/tooth?user=baoye";
+//		        HttpGet get = new HttpGet(getURL);
+//		        
+//		        try {
+//					HttpResponse responseGet = client.execute(get);  
+//			        HttpEntity resEntityGet = responseGet.getEntity();  
+//			        if (resEntityGet != null) {  
+//			                    //do something with the response
+//			        	tString = EntityUtils.toString(resEntityGet);
+//
+//			        	//Log.i("GET RESPONSE",EntityUtils.toString(resEntityGet));
+//			        	//Log.v("printtstring", tString);
+//			        }
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//		        Message message = new Message();
+//		        Bundle data = new Bundle();
+//		        data.putString("result", tString);
+//		        message.setData(data);
+//		        handler.sendMessage(message);
+//			}
+//		};
+//		new Thread(runnable).start();
 	}
 
 	@Override
@@ -168,13 +168,13 @@ public class InfoFragment extends Fragment{
 		this.context = rootView.getContext();
 		mgr = new DBManager(this.context);
 	    mgr.openDatabase();
-	    
-	    try {
-			mgr.updateDatabase(tString);
-			} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//	    
+//	    try {
+//			mgr.updateDatabase(tString);
+//			} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	    
 		SDPatient patient= mgr.queryByName("Õı“ª");
 		Button upload = (Button)rootView.findViewById(R.id.infoupload);

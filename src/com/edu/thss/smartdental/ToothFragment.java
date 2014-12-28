@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.app.Activity;
+import android.content.SharedPreferences;
 
 public class ToothFragment extends Fragment  {
 	
 	private FragmentManager fm = null; 
 	private RadioGroup radioGroup;
+	private String userName = "";
 	public ToothFragment(){
 		
 	}
@@ -24,6 +27,7 @@ public class ToothFragment extends Fragment  {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_tooth, container,false);
+		userName = getActivity().getSharedPreferences("setting", android.content.Context.MODE_PRIVATE).getString("username", "");
 		fm = getFragmentManager();
 		radioGroup = (RadioGroup)rootView.findViewById(R.id.tooth_tab);
 		radioGroup.check(R.id.tooth_tab_permanent);
@@ -51,7 +55,7 @@ public class ToothFragment extends Fragment  {
 		switch(index){
 		case 0: tempfragment = new ToothPermanentFragment();break;
 		case 1: tempfragment = new ToothPrimaryFragment();break;
-		case 2: tempfragment = new Tooth2DFragment();break;
+		case 2: tempfragment = new Tooth2DFragment(userName);break;
 		default: break;
 		}
 		if(tempfragment != null){
