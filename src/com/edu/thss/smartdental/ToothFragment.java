@@ -55,7 +55,7 @@ public class ToothFragment extends Fragment  {
 		switch(index){
 		case 0: tempfragment = new ToothPermanentFragment();break;
 		case 1: tempfragment = new ToothPrimaryFragment();break;
-		case 2: tempfragment = new Tooth2DFragment("baoye");break;
+		case 2: tempfragment = new Tooth2DFragment(userName);break;
 		default: break;
 		}
 		if(tempfragment != null){

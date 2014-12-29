@@ -122,6 +122,7 @@ public class Tooth2DFragment extends Fragment{
 	 * @param illCodeList
 	 */
 	private void initRadioButton(ArrayList <Integer> illCodeList){
+		radioGroup.clearCheck();
 		radioGroup.removeAllViews();
 		DBManager mgr = new DBManager(this.context);
 		mgr.openDatabase();
@@ -178,6 +179,7 @@ public class Tooth2DFragment extends Fragment{
 			  	getToothInfoFromDB();
 			  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
 				initRadioButton(illCodeList);
+				radioGroup.check(0);
 		    }
 		};
 	}
@@ -386,6 +388,7 @@ public class Tooth2DFragment extends Fragment{
 					getToothInfoFromDB();
 				  	ArrayList <Integer> illCodeList = getDiagnoseArrayByIllness();
 					initRadioButton(illCodeList);
+					radioGroup.check(0);
 				}
 		        Message message = new Message();
 		        Bundle data = new Bundle();
